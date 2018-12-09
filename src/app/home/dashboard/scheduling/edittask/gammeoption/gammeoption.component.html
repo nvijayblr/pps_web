@@ -1,0 +1,188 @@
+
+<div class="edit-gamme-blk">                      <!--&& !gammeData.maintenancetask"-->
+  <p *ngIf="isGammeOption && !gammeData.withoutGamme">Gamme Option</p>
+  <div *ngIf="isGammeOption && !gammeData.withoutGamme"
+    class="gamme-table-edit">
+    <table>
+      <thead>
+        <tr>
+          <th>
+            <div class="edit-flex">
+              <div class="col width-5"></div>
+              <div class="col width-15">NOM /
+                <br/>N Channel</div>
+              <div class="col width-10">Line</div>
+              <div class="col width-10">Speed</div>
+              <div class="col width-10">Yield</div>
+              <div class="col width-14">Pull Tons / Day</div>
+              <div class="col width-12">Manning</div>
+              <div class="col width-10">Cost</div>
+              <div class="col width-14">Preference</div>
+            </div>
+          </th>
+        </tr>
+      </thead>
+    </table>
+    <div class="gamme-display">
+      <table>
+        <tr>
+          <td>
+              <!-- highlight -->
+            <div class="edit-flex">
+              <div class="col width-5"></div>
+              <div class="col width-15" *ngIf = "!selectedGamme.Nom">{{selectedGamme.Nom}} <br/>{{selectedGamme.NChannel}}</div>
+              <div class="col width-15" *ngIf = "selectedGamme.Nom">{{selectedGamme.Nom}} /<br/>{{selectedGamme.NChannel}}</div>
+              <div class="col width-10">{{selectedGamme.MacDescription}}</div>
+              <div class="col width-10">{{selectedGamme.Speed}}</div>
+              <div class="col width-10">{{selectedGamme.Yield}}</div>
+              <div class="col width-14">{{selectedGamme.PullTonsPerDay}}</div>
+              <div class="col width-12">{{selectedGamme.Manning}}</div>
+              <div class="col width-10">{{selectedGamme.Cost}}</div>
+              <div class="col width-14 text-break-word text-align-left">{{selectedGamme.Preference}}</div>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="faded-box">
+        <span class="bold" *ngIf = "selectedGamme.LChannel">L Channel:</span >{{selectedGamme.LChannel}}
+    </div>
+
+    <div class="edit-task-table gamme-option">
+      <perfect-scrollbar style="min-height:40px; max-height:150px; height:150px;">
+        <table>
+          <tbody>
+            <tr *ngFor="let gamme of modifyTaskDurationObject; let i = index">
+              <td>
+                <div class="edit-flex" [ngClass]="{'highlight':gamme.IsSelectedLine}">
+                  <div class="col width-5">
+                    <div class="form-check" *ngIf="gamme.MacDescription.indexOf('//') == -1 && !gammeData.newStartDateDisableStatus">
+                      <input class="form-check-input ng-untouched ng-valid ng-dirty" id="radioGammeSelect{{i}}" name="radioGammeSelectStatus" type="radio"
+                        [checked]="gamme.IsSelected" (change)="onGammeSelectionChange(gamme)">
+                      <label class="form-check-label" for="radioGammeSelect{{i}}"></label>
+                    </div>
+                  </div>
+                  <div class="col width-15">{{gamme.Nom}} /<br/>{{gamme.NChannel}}</div>
+                  <div class="col width-10">{{gamme.MacDescription}}</div>
+                  <div class="col width-10">{{gamme.Speed}}</div>
+                  <div class="col width-10">{{gamme.Yield}}</div>
+                  <div class="col width-14">{{gamme.PullTonsPerDay}}</div>
+                  <div class="col width-12">{{gamme.Manning}}</div>
+                  <div class="col width-10">{{gamme.Cost}}</div>
+                  <div class="col width-14 text-break-word">{{gamme.Preference}}</div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </perfect-scrollbar>
+    </div>
+    <div class="gamme-display" *ngIf="isSpecialGamme">
+      <table>
+        <tr>
+          <td>
+            <div class="edit-flex">
+              <div class="col editcol-1"></div>
+              <div class="col editcol-2">{{specialGamme[0].Nom}} /<br/>{{specialGamme[0].NChannel}}</div>
+              <div class="col editcol-5">{{specialGamme[0].MacDescription}}</div>
+              <div class="col editcol-2">{{specialGamme[0].Speed}}</div>
+              <div class="col editcol-3">{{specialGamme[0].Yield}}</div>
+              <div class="col editcol-2">{{specialGamme[0].PullTonsPerDay}}</div>
+              <div class="col editcol-2">{{specialGamme[0].Manning}}</div>
+              <div class="col editcol-4">{{specialGamme[0].Cost}}</div>
+              <div class="col editcol-4  text-break-word">{{specialGamme[0].Preference}}</div>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="gamme-display" *ngIf="isSpecialGamme && specialGamme[1]!== undefined">
+      <table>
+        <tr>
+          <td>
+            <div class="edit-flex">
+              <div class="col editcol-1"></div>
+              <div class="col editcol-2">{{specialGamme[1].Nom}} /<br/>{{specialGamme[1].NChannel}}</div>
+              <div class="col editcol-5">{{specialGamme[1].MacDescription}}</div>
+              <div class="col editcol-2">{{specialGamme[1].Speed}}</div>
+              <div class="col editcol-3">{{specialGamme[1].Yield}}</div>
+              <div class="col editcol-2">{{specialGamme[1].PullTonsPerDay}}</div>
+              <div class="col editcol-2">{{specialGamme[1].Manning}}</div>
+              <div class="col editcol-4">{{specialGamme[1].Cost}}</div>
+              <div class="col editcol-4  text-break-word">{{specialGamme[1].Preference}}</div>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+<div class="edit-duration-area" *ngIf="speedFactorFlag && !gammeData.newStartDateDisableStatus">
+  <div class="row ">
+    <div class="col-12 ">
+      <div class=" edit-date-blk edit-duration-bg padding-tb ">
+        <div class="col-12 ">
+            <div class="row" title="Please provide speed factor">
+              <div class="col-6 speedFactorStyle" *ngFor="let lines of descriptionArray;">
+                <div class="row">
+                  <div class="col-10 d1-flex flex-nowrap">
+                    <label class="label-style add-task-label">
+                      <p>Speed Factor For Line {{lines.line}} </p>
+                    </label>
+                  </div>
+                  <div class="col-2">
+                    <div class="row">
+                      <div class="text-wrapper" style="margin-left: -3rem;">
+                        <span style="display:none"></span>
+                        <input type="text" class="custom-textbox" onkeypress='return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46'
+                          maxlength="4" step="0.01" max="1" min="0" onPaste="return false" [(ngModel)]="lines.speedFactor"   [ngClass]="{'error-class':lines.speedFactor === '' && gammeData.onSaveClick}">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="showMachineListPopUp && !gammeData.newStartDateDisableStatus" class="popup-wrapper popup-visible ">
+  <div class="popup-overlay"></div>
+  <div class="popup-container selectLinePopup">
+    <div class="popup-content">
+      <h4 class="pop-title">Select Line</h4>
+      <div class="pop-body">
+          <p>The LineId in gamme option is not valid.<br>Please select a valid LineId</p>
+          <div class="row">
+            <div class="col-12">
+              <div class="row">
+                <div class="col-4">
+                  <span class="select-line">Select Line :</span>
+                </div>
+                <div class="col-8">
+                  <div class="row">
+                    <div class="form-group">
+                    <div class="dropdown">
+                      <div class="select-box">
+                        <select class="custom-select form-control"  id="line" name="line"  [(ngModel)]="selectedLine">
+                          <option value="0" selected>Select Line</option>
+                          <option *ngFor="let lines of selectLineList; let i = index" [ngValue]="lines">{{lines.Description}}</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+      <div class="pop-footer m-t-20">
+        <button class="btn btn-popup-blue" (click)="onCancel()">Cancel</button>
+        <button class="btn btn-popup-blue" (click)="onSave(selectedLine)">Continue</button>
+      </div>
+    </div>
+  </div>
+</div>
+<app-loader id="appLoader" [hidden]="!loading"></app-loader>

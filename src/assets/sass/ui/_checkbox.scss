@@ -1,0 +1,44 @@
+/* Checkbox */
+.checkbox-container{
+    display: inline-block;
+    input[type="checkbox"]{
+        display: none;
+    }
+    label{
+        display: inline-block;
+        position: relative;
+        cursor: pointer;
+        padding-left:23px;
+        color:$active-color;
+        &:before{
+            width:13px;
+            height:13px;
+            border-radius:2px;
+            background: rgba(49,40,87,.5);
+            content:"";
+            position: absolute;
+            left:0;
+            top:0;
+        }
+    }
+    input[type="checkbox"]:checked + label:after{
+        font-family: 'icomoon';
+        content: "\e900";
+        position: absolute;
+        top:0;
+        left:4px;
+        font-size:5px;
+        color: #fff;
+    }
+    input[type="checkbox"]:disabled + label:after{
+        font-family: 'icomoon';
+        content: "\e900";
+        position: absolute;
+        top:0;
+        left:4px;
+        font-size:5px;
+        color: #fff;
+        cursor: not-allowed;
+    }
+}
+/* Checkbox */

@@ -1,0 +1,151 @@
+<div class="row" *ngIf="packData.newStartDateDisableStatus !== true">  <!--*ngIf="!packData.maintenancetask"-->
+  <div class="col-6 checkbox-container pack-edit-chk pack-adjust-chk">
+    <div class="checkbox-container">
+      <input type="checkbox" id="adj-pack-task" checked [(ngModel)]="adjustProductionTaskDuration" (ngModelChange)="adjustProductionTaskDurationChange()">
+      <label for="adj-pack-task">Edit pack tasks</label>
+    </div>
+  </div>
+  <div class="col-6">
+    <button class="btn btn-blue pull-right m-b-25" (click)="calculatePackTaskDates()">Calculate Pack Task Dates</button>
+  </div>
+</div>  <!--*ngIf="!packData.maintenancetask"-->
+<div class="edit-gamme-blk pack-edit-blk adjust-production-table">
+  <div class="edit-task-table">
+    <table border="1">
+      <thead>
+        <tr>
+          <th rowspan="2" width="4%"></th>
+          <th rowspan="2" width="8%">Pack<br> P.O No</th>
+          <th colspan="1" width="13%">Item No</th>
+          <th colspan="2" width="22%"> <strong>Quantity</strong> </th>
+          <th colspan="1" width="19%"> <strong>Duration</strong> </th>
+          <th rowspan="2" width="8%">Manning</th>
+          <th rowspan="2" width="11%">Ship<br>Date/Time</th>
+          <th width="3%" rowspan="2" ></th>
+          <th *ngIf="packData.newStartDateDisableStatus !== true" width="3%" rowspan="2" class="noborder-left"></th>
+        </tr>
+        <tr>
+          <th>Description</th>
+          <th class="align-text-left">Required <br> Quantity<span class="required">*</span></th>
+          <th class="align-text-left">Suggested <br> Max<span class="required">*</span></th>
+          <th class="align-text-left">Start Date/Time <span class="required">*</span><br> End Date/Time<span class="required">*</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let listOfPackDetail of modifyTaskDurationObject.listOfPackDetails; let i = index">
+          <tr>
+            <td rowspan="2">
+              <!-- <i class="edit-icon-split"></i> -->
+              <div class="checkbox-container pack-edit-chk left-align">
+                  <input [disabled]="listOfPackDetail.IsBulkTask === true || adjustProductionTaskDuration === false || isProdDataAvailable === false"
+                  type="checkbox" id="{{i}}" name="chk-pack-task" [(ngModel)]="listOfPackDetail.Checked" (ngModelChange)="onPackItemCheckboxChange(listOfPackDetail, i)" class="align-text-left">
+               <label  for="{{i}}"></label>
+              </div>
+                <!-- <div class="checkbox-container pack-edit-chk">
+                  <input [disabled]="listOfPackDetail.IsBulkTask === true || adjustProductionTaskDuration === false || isProdDataAvailable === false"
+                    type="checkbox" id="{{i}}" name="chk-pack-task" [(ngModel)]="listOfPackDetail.Checked" (ngModelChange)="onPackItemCheckboxChange(listOfPackDetail, i)">
+                  <label for="{{i}}"></label>
+                </div> -->
+              <!-- <div class="checkbox-container">
+                  <input [disabled]="listOfPackDetail.IsBulkTask === true || adjustProductionTaskDuration === false || isProdDataAvailable === false" type="checkbox" id="{{i}}" name="chk-pack-task" [(ngModel)]="listOfPackDetail.Checked"
+                    (ngModelChange)="onPackItemCheckboxChange(listOfPackDetail, i)">
+                  <label for="{{i}}"></label>
+              </div> -->
+            </td>
+            <td rowspan="2">
+              <label>{{listOfPackDetail.PONumber}}</label>
+            </td>
+            <td class="align-text-left"  role="ItemNumber & Description">{{listOfPackDetail.ItemNumber}} <hr> {{listOfPackDetail.Description}}</td>
+            <td role="Min">
+              <div class="d-flex flex-nowrap">
+                <div class="text-wrapper pack-text-wrap">
+                  <input [disabled]="listOfPackDetail.Checked === false || adjustProductionTaskDuration === false || listOfPackDetail.IsBulkTask === true || isProdDataAvailable === false" type="text" class="custom-textbox align-text-left" id="packtaskMinQuantity"
+                    name="packtaskMinQuantity" [(ngModel)]="listOfPackDetail.QuantItems" (blur)="packtaskMinQuantityBlur(listOfPackDetail, i)"
+                    maxlength="9" onPaste="return false" onkeypress='return event.charCode >= 48 && event.charCode <= 57' style="font-size:14px;"
+                    [ngClass]="{'error-class':listOfPackDetail.QuantItems === null && packData.onSaveClick && listOfPackDetail.Checked === true}">
+                </div>
+              </div>
+            </td>
+            <td  role="Max">
+              <div class="d-flex flex-nowrap">
+                <div class="text-wrapper pack-text-wrap">
+                  <input [disabled]="listOfPackDetail.Checked === false || adjustProductionTaskDuration === false || listOfPackDetail.IsBulkTask === true || listOfPackDetail.QuantItems === null || listOfPackDetail.QuantItems === '' || isProdDataAvailable === false" 
+                    type="text" class="custom-textbox align-text-left" id="packtaskMaxQuantity"
+                    name="packtaskMaxQuantity" [(ngModel)]="listOfPackDetail.QuantItemsMax" (blur)="packtaskMaxQuantityBlur(listOfPackDetail, i)"
+                    maxlength="9" onPaste="return false" onkeypress='return event.charCode >= 48 && event.charCode <= 57' style="font-size:14px;"
+                    [ngClass]="{'error-class':(listOfPackDetail.QuantItemsMax === null || listOfPackDetail.QuantItemsMax === undefined) && packData.onSaveClick && listOfPackDetail.Checked === true}">
+                </div>
+              </div>
+            </td>
+            <td  role="Duration Start Date and End Date">
+              <div class="d-flex flex-nowrap">
+                <div class="text-wrapper pack-text-wrap">
+                  <input [disabled]="true" id="packTaskStartDate" name="packTaskStartDate"
+                    ngui-datetime-picker date-format="MM/DD/YYYY hh:mm:A" parse-format="YYYY-MM-DD HH:mm:A" class="custom-textbox align-text-left"
+                    [min-date]="date2MinDate" [close-on-select]="false" readonly [(ngModel)]="listOfPackDetail.BeginDate" (valueChanged)="packtaskStartDateChange(listOfPackDetail, i)"
+                    [ngClass]="{'error-class':listOfPackDetail.BeginDate === null && packData.onSaveClick && listOfPackDetail.Checked === true}">
+                </div>
+              </div>
+              <div class="d-flex flex-nowrap mt-1">
+                <div class="text-wrapper pack-text-wrap">
+                  <input [disabled]="true" id="packTaskEndDate" name="packTaskEndDate"
+                    ngui-datetime-picker date-format="MM/DD/YYYY hh:mm:A" parse-format="YYYY-MM-DD HH:mm:A" class="custom-textbox align-text-left"
+                    [min-date]="date2MinDate" [close-on-select]="false" readonly [(ngModel)]="listOfPackDetail.EndDate" (valueChanged)="packtaskEndDateChange(listOfPackDetail, i)"
+                    [ngClass]="{'error-class':(listOfPackDetail.EndDate === null ||listOfPackDetail.EndDate === undefined)  && packData.onSaveClick && listOfPackDetail.Checked === true}">
+                </div>
+              </div>
+            </td>
+            <td>{{listOfPackDetail.ColdEndManning}}</td>
+            <td class="datepicker-right-bottom hidden-datepicker-table">
+              <input id="shipDate" name="shipDate" [disabled]="listOfPackDetail.EndDate === null &&listOfPackDetail.BeginDate === null"
+                date-only="true" ngui-datetime-picker date-format="MM/DD/YYYY" parse-format="YYYY-MM-DD" class="custom-textbox hidden-datepicker"
+                [close-on-select]="false" readonly [(ngModel)]="listOfPackDetail.ShipDate">
+              <span class="date-display">{{listOfPackDetail.ShipDate}}</span>
+            </td>
+            <td class="noborder-left align-middle" role="arrow down">
+              <div class="d-flex flex-nowrap">
+                <div class="arrow-down"  *ngIf= "!withoutGamme">
+                  <a class="icon-arrow-toggle {{listOfPackDetail.toggleIcon}}" (click)="onViewLessMore(listOfPackDetail)"></a>
+                </div>
+              </div>
+            </td>
+            <!-- please add this code for hide   class="arrow-hide" -->
+            <td role="move arrow " class="align-middle" *ngIf="packData.newStartDateDisableStatus !== true"> 
+              <i *ngIf= "listOfPackDetail.Checked ===true && listOfPackDetail.showUpArrow === true" class="edit-icon-sort-up" (click)="onUpArrowClick(i)"></i>
+              <i *ngIf= "listOfPackDetail.Checked ===true && listOfPackDetail.showDownArrow === true" class="edit-icon-sort-down" (click)="onDownArrowClick(i)"></i>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="8" *ngIf="listOfPackDetail.ViewLessMore">
+              <div class="hide-more-info show-more-info">
+                <div class="line-1">
+                  <span>
+                    <strong>NOM:</strong> {{listOfPackDetail.NOM}}</span>
+                  <span>
+                    <strong>N Channel:</strong> {{listOfPackDetail.NChannel}}</span>
+                </div>
+                <div class="line-2">
+                  <span>
+                    <strong>L Channel:</strong>{{listOfPackDetail.LChannel}}</span>
+                  <!-- <span>Speed:60.0/min</span>
+                  <span>Yield:82.0%</span>
+                  <span>Manning:0</span> -->
+                </div>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+        <tr *ngIf="modifyTaskDurationObject.listOfPackDetails.length == 0">
+          <td *ngIf="packData.newStartDateDisableStatus !== true" colspan="10" class="no-records-td text-align-center">
+            <strong>No Records Found</strong>
+          </td>
+          <td *ngIf="packData.newStartDateDisableStatus === true" colspan="9" class="no-records-td text-align-center">
+            <strong>No Records Found</strong>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<!--Loader-->
+<app-loader id="appLoader" [hidden]="!loading"></app-loader>

@@ -1,0 +1,57 @@
+/* Declaring Variables */
+// Font
+$font-family: 'ArialMT';
+$font-bold: 'Arial-BoldMT';
+$font-x-large:rem(20);
+$font-large:rem(18);
+$font-medium:rem(16);
+$font-normal:rem(14);
+$font-small:rem(12);
+
+// Color
+$primary-color:#368ef8;
+$active-color:#312857;
+$black: #000;
+$white: #fff;
+$green: #48cb1f;
+$color-red: #c83f44;
+$placeholder-color: #afb3bc;
+
+// BORDER
+$border-color:#dbe1e5;
+$border-radius:rem(5);
+$border-radius-large:rem(10);
+
+// POPOVER
+$zindex-popover:1060;
+$popover-max-width:rem(353);
+$popover-bg:#f6fafb;
+$popover-border-color:#e1e5e8;
+$border-radius-popover:rem(4);
+$popover-arrow-width:rem(10);
+$popover-arrow-outer-width:rem(11);
+$popover-arrow-outer-color:#e1e5e8;
+$popover-arrow-color:#f6fafb;
+
+/* range slider*/
+$track-color: #eceff1 !default;
+$thumb-color: #3182e4 !default;
+$thumb-radius: 12px !default;
+$thumb-height: 24px !default;
+$thumb-width: 24px !default;
+$thumb-shadow-size: 4px !default;
+$thumb-shadow-blur: 4px !default;
+$thumb-shadow-color: rgba(0, 0, 0, .2) !default;
+$thumb-border-width: 2px !default;
+$thumb-border-color: #eceff1 !default;
+
+// track
+$track-width: 100% !default;
+$track-height: 8px !default;
+$track-shadow-size: 1px !default;
+$track-shadow-blur: 1px !default;
+$track-shadow-color: rgba(0, 0, 0, .2) !default;
+$track-border-width: 1px !default;
+$track-border-color: #dbe1e5 !default;
+$track-radius: 5px !default;
+$contrast: 5% !default;

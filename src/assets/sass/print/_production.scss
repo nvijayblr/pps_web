@@ -1,0 +1,299 @@
+$print-border-color-1: #d0d0d0;
+$print-border-color-2: #000000;
+$print-border-color-3: #c7c7c7;
+
+//$print-schedule-bg: #f0f0f0;
+$print-schedule-bg: #ffffff;
+
+$print-font-size: 10px;
+
+.tight{
+    height: 98%;
+    width: 100%;
+    clear: both;
+    overflow: hidden;
+    .col-p:last-child{
+        border-right: none !important;
+    }
+}
+hr.black{
+    margin: 0;
+    width: 100%;
+    padding: 0;
+    border: none;
+    border-top: 1px solid $print-border-color-2;
+}
+.export-header{
+    height: auto;
+    top: 0;
+    z-index: 1500;
+}
+.app-header .form-container a{
+    margin-left: 0.5rem;
+    display: inline-block;
+    text-decoration: none;
+    font-size: 1.5rem;
+}
+.app-header .form-container button,
+.app-header .form-container a{
+    border: 0px;
+    border-radius: 3px;
+    padding: 0.8rem;
+    background-color: #368ef8;
+    font-size: 1rem;
+    color: white;
+}
+.app-header .form-container button:hover,
+.app-header .form-container a:hover{
+    background-color: #186ed6;
+}
+.app-header .form-container{
+    float: right;
+    margin: 0.5rem 0;
+    width: auto;
+}
+.sheet h4{
+    padding: 1rem;
+    text-align: center;
+    font-size: 1.5rem;
+}
+.sheet h5{
+    padding: 1rem;
+    text-align: center;
+    font-size: 1.2rem;
+    float: left;
+    width: 100%;
+    margin-top: 6px;
+    text-align: center;
+}
+.head-section{
+    display:flex;
+    > div.col-p-2,
+    > div.col-p-10 .col-p{
+        border-right: 1px solid $print-border-color-1;
+    }
+    > div.col-p-2{
+        padding-right: 0;
+        margin-right: 5px;
+        width: 169px;
+        display: flex;
+        border-bottom: 1px solid $print-border-color-2;
+        border-right: 1px solid $print-border-color-2;
+
+        span{
+            align-self: center;
+            font-family: 'Arial-BoldMT';
+        }
+        
+    }
+    > div.col-p-10{
+        height: 45px;
+        z-index: 5;
+        .col-p{
+            height: 100%;
+            z-index: 1;
+            .col-p-12{
+                height: 65%;
+                display: flex;
+                span{
+                    text-align: center;
+                    align-self: center;
+                    width: 100%;
+                    font-size: 12px;
+                }
+                border-bottom: 1px solid $print-border-color-1;
+            }
+            .col-p-4{
+                height: 35%;
+                display: flex;
+                font-size: 8px;
+                border-right: 1px solid $print-border-color-1;
+                
+                span{
+                    text-align: center;
+                    align-self: center;
+                    width: 100%;
+                }
+            }
+            .first{
+                margin-left:1px !important;
+            }
+            .last{
+                margin-right: -1px !important;
+                border-right: none !important;
+            }
+        }
+    }
+    > div.col-p-10{
+        border-left: 1px solid $print-border-color-2;
+        border-bottom: 1px solid $print-border-color-2;
+    }
+    > div{
+        border-top: 1px solid $print-border-color-2;
+        text-align: center;
+    }
+}
+.schedules{
+    .col-p{
+        display: flex;
+        overflow: hidden;
+        height: 48px;
+        border-right: 1px solid $print-border-color-1;
+    }
+}
+.head-second-section{
+    > div.col-p-2{
+        padding-right: 0;
+        margin-right: 5px;
+        width: 169px;
+        display: flex;
+        font-size: $print-font-size;
+
+        span.bold{
+            align-self: center;
+            font-family: 'Arial-BoldMT';
+        }
+    }
+    > div.col-p-10 .col-p{
+        height: 100%;
+        border-right: 1px solid $print-border-color-1;
+    }
+    > div.col-p-10{
+        border-left: 1px solid $print-border-color-2;
+    }
+
+    > div.col-p-2,
+    > div.col-p-10 .col-p{
+        padding-top:5px;
+        padding-bottom:5px;
+        z-index: 1;
+    }
+    > div.col-p-2,
+    > div.col-p-10{
+        height: 24px;
+        z-index: 5;
+    }
+}
+.container-p{
+    width: 100%;
+    float: left;
+    height: auto;
+    border-right: 1px solid $print-border-color-2;
+    border-left: 1px solid $print-border-color-2;
+
+    .head-second-section{
+        width: 100%;
+        float: left;
+        font-size: 12px;
+
+        .col-p-2,
+        .col-p-10 .col-p{
+            display: flex;
+            span{
+                align-self: center;
+            }
+            .col-p-12{
+                align-self: center;
+            }
+        }
+        .col-p-2{
+            border-bottom: 1px solid $print-border-color-2;
+            border-right: 1px solid $print-border-color-2;
+        }
+        .col-p-10{
+            border-bottom: 1px solid $print-border-color-2;
+            overflow: hidden;
+        }
+    }
+
+    .schedule-group{
+        > div.col-p-2{
+            padding-right: 0;
+            margin-right: 5px;
+            width: 169px;
+            display: flex;
+            font-size: $print-font-size;
+            
+            span.bold{
+                align-self: center;
+                font-family: 'Arial-BoldMT';
+            }
+        }
+        .col-p-2{
+            border-bottom: 1px solid $print-border-color-2;
+            border-right: 1px solid $print-border-color-2;
+        }
+        .col-p-10{
+            border-bottom: 1px solid $print-border-color-2;
+            border-left: 1px solid $print-border-color-2;
+            overflow: hidden;
+            z-index: 5;
+        }
+    }
+}
+.schedule-group{
+    > div.col-p-2,
+    > div.col-p-10{
+        height: 33px;
+    }
+    > div.col-p-2,
+    > div.col-p-10{
+        overflow: hidden;
+        padding-top:1px;
+        padding-bottom: 1px;
+    }
+    > div.col-p-2{
+        display: flex;
+        span{
+            align-self: center;
+        }
+    }
+
+    .schedules{
+        .col-p{
+            z-index: 1;
+            position: static !important;
+            .col-p-4{
+                position: static !important;
+                .cell{
+                    position: absolute;
+                    z-index: 1;
+                    background: $print-schedule-bg;
+                    font-size: 10px;
+                    border: 1px solid $print-border-color-3;
+                    height: 98%;
+                    overflow: hidden;
+                    font-family: 'Arial-BoldMT';
+                    font-size: 8px;
+                    padding: 3px;
+                    border-radius: 2px;
+                    letter-spacing: 0.5px;
+                    top:1%;
+                    line-height: 8px;
+
+                    p{
+                        font-family: 'ArialMT';
+                    }
+                }
+            }
+        }
+    }
+}
+@media print{
+    .app-header{
+      display: none !important;
+    }
+    .tight{
+        padding: 1px;
+    }
+}
+
+@media print and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+    .tight{
+        padding: 2px;
+    }
+    .container-p{
+        border-right: 0.05mm solid $print-border-color-2;
+        border-left: 0.05mm solid $print-border-color-2;
+    }
+}

@@ -1,0 +1,35 @@
+.dropdown{
+    position: relative;
+
+    .select-box{
+      &::before{
+          pointer-events: none;
+          content: "";
+          position: absolute;
+          top:0.6rem;
+          right: 1.6rem;
+          border: solid #368ef8;
+          border-width: 0 1px 1px 0;
+          display: inline-block;
+          padding: 3px;
+          @include transform (rotate(45deg));
+      }
+
+      select{
+        appearance:none;
+        -webkit-appearance:none;
+        -moz-appearance:none;
+        -ms-appearance:none;
+      }
+    }
+
+    label {
+        display: block;
+        max-width: 100%;
+        color: black;
+        font-size: rem(14);
+        line-height: 1;
+        margin-bottom: rem(10);
+        clear: both;
+    }
+}

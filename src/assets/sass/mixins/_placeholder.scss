@@ -1,0 +1,28 @@
+@mixin placeholder {
+    /* - Chrome ≤56,
+     - Safari 5-10.0
+     - iOS Safari 4.2-10.2
+     - Opera 15-43
+     - Opera Mobile >12
+     - Android Browser 2.1-4.4.4
+     - Samsung Internet
+     - UC Browser for Android
+     - QQ Browser */
+  ::-webkit-input-placeholder {@content};
+
+  /* Firefox 4-18 */
+  :-moz-placeholder {@content};
+
+  /* Firefox 19-50 */
+  ::-moz-placeholder {@content};
+
+  /* - Internet Explorer 10–11
+     - Internet Explorer Mobile 10-11 */
+  :-ms-input-placeholder {@content};
+
+  /* Edge (also supports ::-webkit-input-placeholder) */
+  ::-ms-input-placeholder {@content};
+
+  /* CSS Pseudo-Elements Level 4 Editor's Draft */
+  ::placeholder {@content};
+}

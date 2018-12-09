@@ -1,0 +1,41 @@
+﻿body {
+    padding-top: 0;
+}
+
+.bg-grey {
+    background: #f1f4f5;
+    height: 100%;
+}
+
+.flex-mid {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-flex-flow: row wrap;
+    -ms-flex-flow: row wrap;
+    flex-flow: row wrap;
+    height: 100%;
+}
+.breadcrumb-top {
+    margin-bottom: 0;
+    padding: 1.5rem;
+}
+.breadcrumb-top li a{
+    color: #fff;
+}
+.breadcrumb-top li.active{
+    color: #fff;
+    opacity: 0.8;
+}
+.btn{
+    opacity: 0.7;
+}
+.btn:hover{
+    opacity: 1;
+}

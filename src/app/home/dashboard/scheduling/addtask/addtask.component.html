@@ -1,0 +1,100 @@
+<section class="main-container clearfix">
+	<!-- Top Navigation Starts Here -->
+	<div class="top-section">
+		<div class="back-nav">
+			<h6>
+				<a class="icon-back" (click)="backFromSimulate()"></a>Create Tasks
+			</h6>
+			<h4 class="marginleft"><span class="required">*</span> Indicates mandatory field</h4>
+		</div>
+		<div class="temp-move">
+					<button class="btn btn-popup-blue" (click)="onCancel()">Cancel</button>
+					<button class="btn btn-popup-blue" (click)="onSave()">Save</button>
+				</div>
+	</div>
+	<!-- Top Navigation Ends Here -->
+	<!-- Main Edit Task Block Starts Here -->
+	<div class="task-blk create">
+		<div class="row">
+			<!-- Production Task Details Starts Here -->
+			<div class="width-45 border-right no-padding">
+				<div class="edit-title">
+					<h4>Production Task Details</h4>
+				</div>
+				<div class="edit-content">
+
+					<app-tasksummary [taskSummaryData]="taskSummaryObject" #taskSummary  (itemNumberCleared) = "packTask.itemNumberCleared($event)"  (itemNumberCleared) = "prodTask.itemNumberCleared($event)" (itemNumberCleared) = "gamme.itemNumberCleared($event)"></app-tasksummary>
+
+					<!-- Gamme options Starts Here -->
+					<app-gammeoption [gammeData]="gammeObject" #gamme (selectedLineID) = "taskSummary.selectedLine($event)" (gammeEmpty) = "gammeEmpty($event)" (shareGammeChangeEvent)="prodTask.gammeChange($event)" (shareGammeLoadEvent)="prodTask.calculateDate($event)"></app-gammeoption>
+
+          <app-productiontask [productionData]="productionObject" #prodTask (productionDataChangeEvent)="packTask.makeProductEffectToPack()" (productionStartDateChangeEvent)="packTask.makeProductDateEffectToPack()" (productionMaxQtyChange)="packTask.makeProdMaxQtyEffectToPack($event)"></app-productiontask>
+
+				</div>
+			</div>
+			<!-- Production Task Details Ends Here -->
+			<!-- Pack Task Details Ends Here -->
+			<div class="width-55 no-padding">
+				<div class="edit-title">
+					<h4 *ngIf="!maintenancetask">Pack Task Details</h4>
+				</div>
+
+				<div class="edit-content">
+			    <!-- Comment Block Starts Here -->
+					<app-packtask [packData]="packObject" #packTask (packMinQuantityChange)="prodTask.makePackMinQuantityEffectToProd($event)" (packMaxQuantityChange)="prodTask.makePackMaxQuantityEffectToProd($event)" (calculatePackTaskDate) = "prodTask.makePackSumEffectToProd($event)"></app-packtask>
+					<!-- Comment Block Ends Here -->
+					<app-comments [commentsData]="commentsObject"></app-comments>
+
+					<!-- <div class="pop-footer m-t-20 edit-footer">
+						<button class="btn btn-popup-blue" (click)="onCancel()">Cancel</button>
+						<button class="btn btn-popup-blue" [disabled] = "isGammePresentForCreate"  (click)="onSave()">Save</button>
+					</div> -->
+
+					<div class="row">
+ 				 	<div class="col-12">
+						<div *ngIf="isGammeSelected" style="margin-top: 21px;" class="color-red">Please select any gamme option.</div>
+ 						<div *ngIf="emptyItemNumber" style="margin-top: 21px;" class="color-red">Item Number should not be empty.</div>
+ 						<div *ngIf="wrongSpeedFactor" style="margin-top: 21px;" class="color-red">Speed Factor should be between 0 and 1.</div>
+ 						<div *ngIf="prodTaskValidation" style="margin-top: 21px;" class="color-red">Please fill {{fields}} in production task. </div>
+ 						<div *ngIf="packTaskValidation" style="margin-top: 21px;" class="color-red">Please fill {{fieldspack}} in pack task. </div>
+ 						<div *ngIf="endDateValid" style="margin-top: 21px;" class="color-red">Start Date/Time should not be greater than or equal to the End Date/Time in production task.</div>
+ 						<div *ngIf="endDateValidPack" style="margin-top: 21px;" class="color-red">Start Date/Time should not be greater than the End Date/Time in pack task.</div>
+ 						<div *ngIf="sumMaxValidation" style="margin-top: 21px;" class="color-red">Sum of Suggested Max of pack task should be equal to the Suggested Max of production task.</div>
+ 						<div *ngIf="sumMinValidation" style="margin-top: 21px;" class="color-red">Sum of Required Quantity of pack task should be equal to the Required Quantity of production task.</div>
+ 						<div *ngIf="startDateEqual" style="margin-top: 21px;" class="color-red">Production task start date should be equal to first pack task start date.</div>
+ 						<div *ngIf="endDateEqual" style="margin-top: 21px;" class="color-red">Production task end date should be equal to last pack task end date.</div>
+ 						<div *ngIf="reasonSelected" style="margin-top: 21px;" class="color-red">Please select Reason for change.{{validationData.selectedLine}}</div>
+						 <div *ngIf="selectedLine" style="margin-top: 21px;" class="color-red">The task will be saved to {{selectedLine}}</div>
+						 <div *ngIf="isMinGreater" style="margin-top: 21px;" class="color-red">Required Quantity cannot be greater than Suggested Max in production task.</div>
+						 <div *ngIf="shipDateValid" style="margin-top: 21px;" class="color-red">Ship Date/Time should not be less than End Date/Time in pack task.</div>
+ 				 	</div>
+ 				 </div>
+				</div>
+
+			</div>
+			<!-- Pack Task Details Ends Here -->
+		</div>
+	</div>
+	<!-- Main Edit Task Block Ends Here -->
+</section>
+<!--Loader-->
+<app-loader id="appLoader" [hidden]="!loading"></app-loader>
+
+<!-- <section class="main-container clearfix">
+  <div>
+    <app-tasksummary [tasksummaryData]="tasksummaryObject"></app-tasksummary>
+  </div>
+  <div>
+    <app-gammeoption [gammeData]="gammeObject" (shareDateChangeEvent)="prodTask.calculateQuantity($event)" (shareGammeLoadEvent)="prodTask.calculateDate($event)"></app-gammeoption>
+  </div>
+  <div>
+    <app-productiontask [productionData]="productionObject" #prodTask></app-productiontask>
+  </div>
+  <div>
+    <app-packtask [packData]="packObject"></app-packtask>
+  </div>
+  <div>
+    <app-comments [commentsData]="commentsObject"></app-comments>
+  </div>
+</section>
+<app-loader id="appLoader" [hidden]="!loading"></app-loader> -->

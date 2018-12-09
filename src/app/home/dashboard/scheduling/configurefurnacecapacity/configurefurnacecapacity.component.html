@@ -1,0 +1,263 @@
+<section class="main-container furnace">
+  <!-- Top Navigation Starts Here -->
+  <div class="top-section">
+    <div class="back-nav">
+      <h6>
+        <a class="icon-back" (click)="backFromConfigureFurnaceCapacity()"></a> Configure Furnace Capacity</h6>
+    </div>
+  </div>
+  <!-- Top Navigation Ends Here -->
+
+  <div class="task-blk">
+    <div class="row">
+      <div class="col-6 border-right">
+        <div class="edit-content">
+          <h2 class="page-title">Default Furnace Capacity</h2>
+          <div class="col-12 box">
+            <div class="row defulat-capacity">
+              <div class="col-8">
+                <div class="row">
+                  <div class="col-4">
+                    <span>
+                      <strong>{{defaultFurnaceList[0].FurnaceName}} :</strong>
+                      <label *ngIf="!isEditDefaultFurnaceCapacity">{{defaultFurnaceList[0].DefaultCapacity}}</label>
+                      <input *ngIf="isEditDefaultFurnaceCapacity" type="text" [(ngModel)]="defaultFurnaceList[0].DefaultCapacity" maxlength="4"
+                        #US1 onPaste="return false" ondragstart="return false;" ondrop="return false;" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+                        class="text-edit editable-text">&nbsp;Tons</span>
+                  </div>
+                  <div class="col-4">
+                    <span>
+                      <strong>{{defaultFurnaceList[1].FurnaceName}} :</strong>
+                      <label *ngIf="!isEditDefaultFurnaceCapacity">{{defaultFurnaceList[1].DefaultCapacity}}</label>
+                      <input *ngIf="isEditDefaultFurnaceCapacity" type="text" [(ngModel)]="defaultFurnaceList[1].DefaultCapacity" maxlength="4"
+                      #US2 onPaste="return false" ondragstart="return false;" ondrop="return false;" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+                        class="text-edit editable-text">&nbsp;Tons</span>
+                  </div>
+                  <div class="col-4">
+                    <span>
+                      <strong>{{defaultFurnaceList[2].FurnaceName}} :</strong>
+                      <label *ngIf="!isEditDefaultFurnaceCapacity">{{defaultFurnaceList[2].DefaultCapacity}}</label>
+                      <input *ngIf="isEditDefaultFurnaceCapacity" type="text" [(ngModel)]="defaultFurnaceList[2].DefaultCapacity" maxlength="4"
+                      #US3 onPaste="return false" ondragstart="return false;" ondrop="return false;" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+                        class="text-edit editable-text">&nbsp;Tons</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-4 button-group-box">
+                <button class="btn btn-blue pull-right btn-s-s" *ngIf="!isEditDefaultFurnaceCapacity" (click)="defaultFurnaceCapacityEdit()">Edit</button>
+                <button class="btn btn-blue pull-right btn-s-s" *ngIf="isEditDefaultFurnaceCapacity" (click)="defaultFurnaceCapacity()">Save</button>
+                <button class="btn btn-blue pull-right btn-s-m" *ngIf="isEditDefaultFurnaceCapacity" (click)="defaultFurnaceCapacityCancel()">Cancel</button>
+              </div>
+            </div>
+          </div>
+          <h2 class="page-title second-title">Edit Furnace Capacity</h2>
+          <div class="col-12 box">
+            <div class="row">
+              <div class="col-6">
+                <div class="row">
+                  <div class="col-8">
+                    <div class="select-down">
+                      <label class="label-bold">Furnace
+                        <em class="red">*</em>
+                      </label>
+                      <select class="custom-select form-control" [(ngModel)]="editFurnaceCapacityObject.furanceId" (ngModelChange)="furnaceSelected()" >
+                        <option value="0" selected>Select</option>
+                        <option *ngFor="let data of defaultFurnaceList; let i = index" value="{{data.FurnaceId}}">{{data.FurnaceName}}</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="row">
+                  <div class="col-12">
+                    <label class="date-range-label label-bold">Select Date Range
+                      <em class="red">*</em>
+                    </label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-6">
+                    <div class="form-group datepicker-icon">
+                      <input id="newDurationStartDate" name="newDurationStartDate" ngui-datetime-picker [min-date]="minDate" date-format="MM/DD/YYYY"
+                        parse-format="YYYY-MM-DD" placeholder="From" [default-value]="editFurnaceCapacityObject.startDate?editFurnaceCapacityObject.startDate:defaultDate" [(ngModel)]="editFurnaceCapacityObject.startDate" class="form-control"
+                        [close-on-select]="true" date-only="true" readonly>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="form-group datepicker-icon">
+                      <input id="newDurationStartDate" name="newDurationStartDate" ngui-datetime-picker [min-date]="minDate" date-format="MM/DD/YYYY"
+                        parse-format="YYYY-MM-DD" placeholder="To" [default-value]="editFurnaceCapacityObject.endDate? editFurnaceCapacityObject.endDate:defaultDate" [(ngModel)]="editFurnaceCapacityObject.endDate" class="form-control"
+                        [close-on-select]="true" date-only="true" readonly>
+                    </div>
+                  </div>
+                  <!-- <div class="col-2">
+                    <button class="btn retriver-button" type="button" name="button"></button>
+                  </div> -->
+                </div>
+              </div>
+
+            </div>
+            <div class="row">
+              <div class="col-6 retrive-tooltip">
+                <h6>Current Capacity :
+                  <button [popper]="'Retrieve current furnace capacity'" [popperTrigger]="'hover'" [popperPlacement]="'top'"
+                    [popperPositionFixed]="true" type="button" class="retriver-button" name="button" (click)="onRetrieveEditButtonClick()"></button>
+                </h6>
+                <p *ngIf="retreiveData[0].DefaultCapacity">{{retreiveData[0].DefaultCapacity}} Tons
+                  <!-- <span class="pull-right"></span> -->
+                </p>
+                <!-- <p>136 Tons
+                  <span class="pull-right"></span>
+                </p> -->
+              </div>
+              <div class="col-6">
+                <h6>New Capacity<em class="red">*</em>:</h6>
+                <div class="form-group font-fix">
+                  <input type="text" class="form-control line-control" [(ngModel)]="editFurnaceCapacityObject.newCapacity" onPaste="return false"
+                    onkeypress='return event.charCode >= 48 && event.charCode <= 57' ondragstart="return false;" ondrop="return false;" maxlength="4"> Tons
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="form-group pull-right m-t-20">
+                  <button class="btn btn-border-blue btn-s-m" (click)="editFurnaceCapacityReset()">Reset</button>
+                  <button class="btn btn-blue btn-s-s" (click)="editFurnaceCapacitySave()">Save</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="edit-content">
+          <div class="pop-table-holder editable-table furance-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>From</th>
+                  <th>To</th>
+                  <th>Furnace</th>
+                  <th>Capacity</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let furnace of furnaceHistoryDetails; let i = index">
+                <tr *ngFor="let details of furnace.FurnaceCapacityDetails; let j = index">
+                  <td>
+                    <input type="text" [(ngModel)]="details.FurnaceCapacityFromDate" class="form-control line-control" disabled>
+                  </td>
+                  <td>
+                    <input type="text" [(ngModel)]="details.FurnaceCapacityToDate" class="form-control line-control" disabled>
+                  </td>
+                  <td>
+                    <input type="text" [(ngModel)]="furnace.FurnaceName" class="form-control line-control" disabled>
+                  </td>
+                  <td>
+                    <input [disabled]="!details.isEdit" type="text" [(ngModel)]="details.FurnaceCapacity" onPaste="return false"
+                     ondragstart="return false;" ondrop="return false;" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+                     maxlength="4" class="form-control line-control">
+                  </td>
+                  <td style="padding-left:14px;padding-right:14px; display: inline-block;">
+                    <button *ngIf="details.isEdit" class="icon-close" type="button" name="button" (click)="onActioncancelButtonClick(details)"></button>
+                    <button *ngIf="!details.isEdit" class="icon-edit" type="button" name="button" (click)="onActionEditButtonClick(details,j)">
+                    </button>
+                    <button *ngIf="details.isEdit" class="icon-save" type="button" name="button" (click)="onActionSaveButtonClick(details)">
+                    </button>
+                    <button *ngIf="!details.isEdit" class="icon-trash" type="button" name="button" (click)="onDeleteButtonClick(details)"></button>
+                  </td>
+                </tr>
+              </ng-container>
+              <tr *ngIf="furnaceHistoryDetails == ''">
+                <td colspan="5" class="no-records-td">
+                  <strong>No upcoming changes to Furnace capacity</strong>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Default Furnace Capacity Popup Starts Here -->
+<div class="popup-wrapper confirm-changes popup-visible" *ngIf="defaultFurnacePopUp">
+	<div class="popup-overlay"></div>
+	<div class="popup-container">
+		<div class="vertical-main">
+			<div class="vertical-content">
+				<div class="popup-content">
+					<h4 class="pop-title">Change default furnace capacity</h4>
+					<div class="pop-body">
+            <div class="row">
+              <div class="col-12">
+                  <p>Are you sure you want to change the default value for </p>
+                  <p *ngIf="US1Show">US1:{{defaultFurnaceList[0].DefaultCapacity}} </p>
+                  <p *ngIf="US2Show">US2:{{defaultFurnaceList[1].DefaultCapacity}} </p>
+                  <p *ngIf="US3Show">US3:{{defaultFurnaceList[2].DefaultCapacity}} </p>
+              </div>
+            </div>
+            <div class="pull-right">
+              <button class="btn btn-blue" (click)="defaultFurnaceCapacitySave()" type="button">Yes</button>
+              <button class="btn btn-blue" (click)="defaultFurnacePopUpCancel()" type="button">No</button>
+            </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Default Furnace Capacity Popup Ends Here -->
+
+<!-- Delete Popup Starts Here -->
+<div class="popup-wrapper confirm-changes popup-visible" *ngIf="deletePopUpShow">
+	<div class="popup-overlay"></div>
+	<div class="popup-container">
+		<div class="vertical-main">
+			<div class="vertical-content">
+				<div class="popup-content">
+					<h4 class="pop-title">Delete</h4>
+					<div class="pop-body">
+            <div class="row">
+              <div class="col-12">
+                  <p>Are you sure you want to delete?</p>
+              </div>
+            </div>
+            <div class="pull-right">
+              <button class="btn btn-blue" (click)="onDeleteYes()" type="button">Yes</button>
+              <button class="btn btn-blue" (click)="onDeleteNo()" type="button">No</button>
+            </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Delete Popup  Ends Here -->
+
+<!-- Edit Furnace Capacity Popup Starts Here -->
+<!-- <div class="popup-wrapper confirm-changes popup-visible">
+	<div class="popup-overlay"></div>
+	<div class="popup-container">
+		<div class="vertical-main">
+			<div class="vertical-content">
+				<div class="popup-content">
+					<h4 class="pop-title">Furnace capacity already changed</h4>
+					<div class="pop-body">
+            <div class="row">
+              <div class="col-12">
+                  <p>A custom value for {{furnace}} is already changed for dates in the selected range. Please select correct dates. </p>
+              </div>
+            </div>
+            <div class="pull-right">
+              <button class="btn btn-blue" (click)="onOkClick()" type="button">Ok</button>
+            </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div> -->
+<!-- Edit Furnace Capacity Popup Ends Here -->

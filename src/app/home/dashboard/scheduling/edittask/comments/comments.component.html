@@ -1,0 +1,51 @@
+<!-------Comment Block Starts Here-------->
+<div class="edit-comment-blk">
+  <p>Comments</p>
+  <div class="edit-modify-area">
+    <div class="popup-comments">
+      <div class="pop-body">
+        <div class="cmt-list-holder">
+          <perfect-scrollbar >
+            <ul *ngIf="ingressComments">
+              <li>
+                <div class="d-flex flex-nowrap">
+                  <h6 class="u-name">Scheduler's Comment:</h6>
+                  <p>{{commentslist.IngressComment}}</p>
+                </div>
+                <p class="edit-comment-date">
+                  <span></span>
+                </p>
+              </li>
+            </ul>
+            <ul *ngIf="isComments">
+              <li *ngFor="let comment of commentslist.TaskEditComments; let i = index">
+                <div class="d-flex flex-nowrap">
+                  <h6 class="u-name">{{comment.ModifiedBy}}:</h6>
+                  <p>{{comment.Comment}}</p>
+                </div>
+                <p class="edit-comment-date">
+                  <span>{{comment.ModifiedDate}}</span>
+                </p>
+              </li>
+            </ul>
+          </perfect-scrollbar>
+          <textarea rows="3" placeholder="Type your comment here..." maxlength="250" [(ngModel)]="comments"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-------Comment Block Ends Here-------->
+<div class="edit-task-reason" *ngIf ="isEditMode">
+  <div class="edit-modify-area">
+    <p>Reason for change<span class="required">*</span> </p>
+    <div class="select-wrapper ex-margin">
+      <select id="reasonforChangeValue" name="reasonforChangeValue" [(ngModel)]="reasonforChange">
+        <option value="0" selected>Reason for change</option>
+        <option *ngFor="let reason of reasonforChangeList; let i = index" value="{{reason.TaskReasonForChangeID}}">{{reason.TaskReasonForChangeName}}</option>
+      </select>
+    </div>
+  </div>
+</div>
+<!--Loader-->
+<app-loader id="appLoader" [hidden]="!loading"></app-loader>

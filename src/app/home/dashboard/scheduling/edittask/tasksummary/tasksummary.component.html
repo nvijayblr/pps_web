@@ -1,0 +1,179 @@
+<div class="edit-modify-area task-summery text-break-word">
+  <div class="row no-gutters">
+    <div class="col-4">
+      <div class="row no-gutters">
+        <div class="col-6">
+          <p>Task Number :</p>
+        </div>
+        <div class="col-6">
+            <p *ngIf="isEditMode"><span>{{modifyTaskDurationObject.TaskNumber}}</span></p>
+            <div *ngIf="!isEditMode" class="row no-gutters">
+              <input type="text" disabled class="custom-textbox" id="TaskNumber" name="TaskNumber" [(ngModel)]="modifyTaskDurationObject.TaskNumber" maxlength="20" onPaste="return false" onkeypress='return event.charCode >= 48 && event.charCode <= 57' style="font-size:14px;">
+            </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-5">
+      <div class="row no-gutters">
+        <div class="col-6">
+          <p>Production P.O :</p>
+        </div>
+        <div class="col-6">
+          <p *ngIf="isEditMode"><span>{{modifyTaskDurationObject.ProductionPONumber}}</span></p>
+          <input  disabled *ngIf="!isEditMode" type="text" class="custom-textbox" id="PONumber" name="PONumber" [(ngModel)]="modifyTaskDurationObject.ProductionPONumber" maxlength="10" onPaste="return false" onkeypress='return event.charCode >= 48 && event.charCode <= 57' style="font-size:14px;">
+        </div>
+      </div>
+    </div>
+    <div class="col-3">
+      <div class="row no-gutters">
+        <div class="col-6">
+          <p>Version :</p>
+        </div>
+        <div class="col-6">
+          <p *ngIf="isEditMode"><span>{{modifyTaskDurationObject.TaskVersion}}</span></p>
+          <input  disabled *ngIf="!isEditMode" type="text" class="custom-textbox" id="TaskVersion" name="TaskVersion" [(ngModel)]="modifyTaskDurationObject.TaskVersion" maxlength="10" onPaste="return false" onkeypress='return event.charCode >= 48 && event.charCode <= 57' style="font-size:14px;">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row no-gutters">
+    <div class="col-4">
+      <div class="row no-gutters">
+        <div class="col-6">
+          <p>Item Number :</p>
+        </div>
+        <div class="col-6 search-itemNumber-wrapper">
+          <p *ngIf="isEditMode"><span>{{modifyTaskDurationObject.ItemNumber}}</span></p>
+          <div  *ngIf="!isEditMode" class="row no-gutters">
+            <ng-select [items]="itemNumberList"
+               bindLabel="ItemNumber"
+               bindValue="ItemNumber"
+               placeholder="Item Number"
+               name="itemNumberTypeahead"
+               class="typeahead"
+               onkeypress='return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122)'
+               (add) = "getItemDescription(modifyTaskDurationObject.ItemNumber)"
+               (clear)="clearedItemNumber($event)"
+               [typeahead]="itemNumberTypeahead"
+               [ngClass]="{'error-class':!modifyTaskDurationObject.ItemNumber && taskSummaryData.onSaveClick}"
+               [(ngModel)]="modifyTaskDurationObject.ItemNumber">
+              <ng-template ng-option-tmp let-item="item">
+                  {{item.ItemNumber}}
+              </ng-template>
+            </ng-select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-8">
+      <div class="row no-gutters">
+        <div class="col-4">
+          <p>Item Description :</p>
+        </div>
+        <div class="col-8">
+          <p *ngIf="isEditMode"><span>{{modifyTaskDurationObject.ItemDescription}}</span></p>
+          <input disabled *ngIf="!isEditMode" type="text" class="custom-textbox" id="ItemDescription" name="ItemDescription" [(ngModel)]="modifyTaskDurationObject.ItemDescription" maxlength="300" onPaste="return false" onkeypress='return event.charCode >= 48 && event.charCode <= 57' style="font-size:14px;">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row no-gutters">
+    <div class="col-4">
+      <div class="row no-gutters">
+        <div class="col-6">
+          <p>Speed Factor :</p>
+        </div>
+        <div class="col-6">
+          <p *ngIf="isEditMode">
+            <span>{{modifyTaskDurationObject.SpeedFactor}}</span>
+          </p>
+          <div *ngIf="!isEditMode" class="row no-gutters">
+            <input type="text" class="custom-textbox" id="SpeedFactor" name="SpeedFactor" [disabled] = "disableSpeedFactor" [(ngModel)]="modifyTaskDurationObject.SpeedFactor" (blur)="speedFactorSetting()" maxlength="4" step="0.01" max="1" min="0" onPaste="return false" onkeypress='return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46' style="font-size:14px;" [ngClass]="{'error-class':(modifyTaskDurationObject.SpeedFactor<0 || modifyTaskDurationObject.SpeedFactor>1) && taskSummaryData.onSaveClick}">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-3">
+      <div class="row no-gutters">
+        <div class="col-5">
+            <p>Line ID :</p>
+        </div>
+        <div class="col-7">
+            <p *ngIf="isEditMode"><span *ngIf="isEditMode">{{modifyTaskDurationObject.MachineDescription}}</span></p>
+            <input disabled *ngIf="!isEditMode"  type="text" class="custom-textbox" id="lineID" name="lineID" [(ngModel)]="modifyTaskDurationObject.MachineDescription" maxlength="10" onPaste="return false" onkeypress='return event.charCode >= 48 && event.charCode <= 57' style="font-size:14px;">
+        </div>
+      </div>
+    </div>
+    <div class="col-5"> <!--&& !taskSummaryData.maintenancetask"-->
+      <div class="row edit-task-reason addtask">
+        <div class="col-5">
+          <div class="row no-gutters">
+            <p>Task Status :</p>
+          </div>
+        </div>
+        <div class="col-7">        <!--&& !taskSummaryData.maintenancetask"-->
+          <p *ngIf="isEditMode"><span>{{modifyTaskDurationObject.TaskStatusName}}</span></p>
+          <div *ngIf="!isEditMode" class="select-wrapper">
+            <select id="taskStatusName" name="taskStatusName" [(ngModel)]="modifyTaskDurationObject.TaskStatusName">
+              <option *ngFor="let status of taskStatusList; let i = index" value="{{status.TaskStatusCode}}" [selected]="status.TaskStatusCode == 10">{{status.TaskStatusName}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row no-gutters">
+    <div class="col-12 task" *ngIf="isEditMode"> <!--&& !taskSummaryData.maintenancetask"-->
+      <div class="row no-gutters">
+        <div class="col-4">
+          <p>Current Quantity :
+            <span *ngIf="isEditMode">{{modifyTaskDurationObject.QuantItems}}</span>
+            <input *ngIf="!isEditMode" type="text" class="custom-textbox edit-task-text" id="currentQuantity" name="currentQuantity" [(ngModel)]="modifyTaskDurationObject.QuantItems" maxlength="9" onPaste="return false" onkeypress='return event.charCode >= 48 && event.charCode <= 57' style="font-size:14px;">
+          </p>
+        </div>
+        <div class="col-3">
+          <p>Current Duration :</p>
+        </div>
+        <div class="col-5 edit-date-blk">
+          <div class="row">
+              <p class="label-style add-task-label">Start Date/Time:</p>
+              <div class="text-wrapper">
+                <p *ngIf="isEditMode"><span>{{taskSummaryObject.startDate}}</span></p>
+                <input *ngIf="!isEditMode" [disabled]="newStartDateDisableStatus==true" id="currentStartDate" name="currentStartDate" ngui-datetime-picker [(ngModel)]="modifyTaskDurationObject.BeginDate" (ngModelChange)="newDurationStartDateChange()" [min-date]="date2MinDate" date-format="MM/DD/YYYY hh:mm:A" parse-format="YYYY-MM-DD HH:mm:A" class="custom-textbox" [close-on-select]="false" readonly>
+              </div>
+          </div>
+          <div class="row">
+              <p class="label-style add-task-label">End Date/Time: </p>
+              <div class="text-wrapper">
+                <p *ngIf="isEditMode"><span>{{taskSummaryObject.endDate}}</span></p>
+                <!-- <span>{{endTimeFinal}}</span> -->
+                <input *ngIf="!isEditMode" [disabled]="newStartDateDisableStatus==true" id="currentEndDate" name="currentEndDate" ngui-datetime-picker [(ngModel)]="modifyTaskDurationObject.EndDate" (ngModelChange)="newDurationStartDateChange()" [min-date]="date2MinDate" date-format="MM/DD/YYYY hh:mm:A" parse-format="YYYY-MM-DD HH:mm:A" class="custom-textbox" [close-on-select]="false" readonly>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="row col-12 maintenance-task" *ngIf="taskSummaryData.maintenancetask"> 
+      <div class="col-3">
+        <p>Current Duration :</p>
+      </div>
+      <div class="col-9 d-flex flex-nowrap edit-date-blk">
+        <label class="label-style add-task-label"><p>Start Date/Time: </p></label>
+        <div class="text-wrapper">
+          <p><span *ngIf="isEditMode">{{taskSummaryObject.startDate}}</span></p>
+          <input *ngIf="!isEditMode" [disabled]="newStartDateDisableStatus==true" id="currentStartDate" name="currentStartDate" ngui-datetime-picker [(ngModel)]="modifyTaskDurationObject.currentStartDate" (ngModelChange)="newDurationStartDateChange()" [min-date]="date2MinDate" date-format="MM/DD/YYYY hh:mm:A" parse-format="YYYY-MM-DD HH:mm:A" class="custom-textbox" [close-on-select]="false" readonly>
+        </div>
+      </div>
+      <div class="col-3"></div>
+      <div class="col-9 d-flex flex-nowrap edit-date-blk">
+        <label class="label-style add-task-label"><p>End Date/Time: </p></label>
+        <div class="text-wrapper">
+          <p><span *ngIf="isEditMode">{{taskSummaryObject.endDate}}</span></p> -->
+          <!-- <span>{{endTimeFinal}}</span> -->
+          <!-- <input *ngIf="!isEditMode" [disabled]="newStartDateDisableStatus==true" id="currentEndDate" name="currentEndDate" ngui-datetime-picker [(ngModel)]="modifyTaskDurationObject.currentEndDate" (ngModelChange)="newDurationStartDateChange()" [min-date]="date2MinDate" date-format="MM/DD/YYYY hh:mm:A" parse-format="YYYY-MM-DD HH:mm:A" class="custom-textbox" [close-on-select]="false" readonly>
+        </div>
+      </div>
+    </div> -->
+  </div>
+</div>
+<app-loader id="appLoader" [hidden]="!loading"></app-loader>

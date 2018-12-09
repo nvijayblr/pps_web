@@ -1,0 +1,11 @@
+$width-maximum:       100 !default;
+$width-dimensions:    1 !default;
+$width-measurement:   '%' !default;
+
+@mixin generate-width {
+  @for $value from 1 through $width-maximum {
+    @if $value % $width-dimensions == 0 {
+      .width-#{$value} { width: #{$value+$width-measurement} !important; }
+   }
+  }
+}

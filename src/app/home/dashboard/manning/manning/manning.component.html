@@ -1,0 +1,443 @@
+<section class="main-container no-gutter-bottum">
+	<!-- Top Navigation Starts Here -->
+	<div class="top-section">
+		<ul class="page-nav" *ngIf="!simulate">
+			<li *ngFor="let button of manningLiButtons; let i = index" (click)="onLiBtnclick(button.name)" [class.current]="isLiItemClicked==button.name">
+				<a title="{{button.name}}">{{button.name}}</a>
+			</li>
+		</ul>
+		<div class="date-selector invisibleDatePicker pull-right">
+			<span class="plain-text">Date</span>
+			<i class="icon-previous" (click)="onPreviousWeekdate()"></i>
+			<span class="date-range">{{weekStartday}} – {{weekEndday}}<input  class="date-range datepickerInlineTextBox" (ngModelChange)="weekPicker(weekstarts.value)"  date-only="true" id="weekstart" name="weekstart" #weekstarts ngui-datetime-picker [(ngModel)]="weekstart" [min-date]="date2MinDate"   date-format="MM/DD/YYYY" parse-format="YYYY-MM-DD" [close-on-select]="true"  [default-value]="defaultDay" date-only="true" readonly>
+			</span>
+			<!-- <span class="date-range">{{weekStartday}} – {{weekEndday}}</span> -->
+			<i class="icon-next" (click)="onFutureWeekdate()"></i>
+		</div>
+		<div class="back-nav" *ngIf="simulate">
+				<h6>
+					<a class="icon-back" (click)="backFromSimulation()"></a>Manning Simulation</h6>
+				<!-- <a class="icon-back" (click)="backFromSimulate()"></a>Primary Production Tasks</h6> -->
+			</div>
+	</div>
+	<div class="status-labels">
+		<h4 *ngFor="let legend of legendData; let i = index">
+			<span [style.background-color]="legend.TaskStatusColor"></span>{{legend.TaskStatusName}}
+		</h4>
+	</div>
+	<!-- Top Navigation Ends Here -->
+</section>
+
+<section>
+	<div class="sticky-container">
+			<sticky sticky-offset-top="68" sticky-zIndex="3" sticky-parent="true" sticky-width="auto" sticky-class="stickyBox" sticky-end-class="stickyBox-unset">
+				<div class="main-container-no-gutters">
+					<div class="sticky-content">
+						<table class="custom-table">
+							<!-- table Header Starts Here -->
+							<thead>
+								<tr>
+									<th class="col-title">All Lines</th>
+									<th class="col-wks">
+										<div class="col-wk col" [class.current]="day.IsCurrentDay === true" *ngFor="let day of weekDays; let i = index">{{day.DisplayName}}</div>
+									</th>
+								</tr>
+							</thead>
+							<!-- table Header Ends Here -->
+							<!-- Time slot Starts Here -->
+							<tbody>
+								<tr class="col-sub">
+									<td class="col-title"></td>
+									<td class="col-wks">
+										<div class="col-wk col {{time.status}}" *ngFor="let time of timeSlot; let i = index">
+											<div class="cell split-3">{{time.first12}}</div>
+											<div class="cell split-3">{{time.middle8}}</div>
+											<div class="cell split-3">{{time.last4}}</div>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+							<!-- Time slot ends Here -->
+						</table>
+					</div>
+				</div>
+			</sticky>
+			<div class="main-container-no-gutters main-container-with-bottom-gutter">
+				<!-- Table Holder Starts Here -->
+				<div class="table-holder m-b-40">
+						<!-- table Body Starts Here -->
+						<div class="scrollable-body">
+							<perfect-scrollbar>
+								<table class="custom-table scroll-table">
+									<tbody>
+										<tr class="data-cols" *ngFor="let FormingLine of formLines; let i = index">
+											<td class="col-title">{{FormingLine.LineName}}</td>
+											<td class="col-wks">
+												<!-- single column starts Here -->
+												<div class="col-wk col" *ngFor="let DaysVal of FormingLine.Days; let j = index" [class.current]="DaysVal.IsCurrentDay === true">
+													<div class="cell split-3"> </div>
+													<div class="cell split-3"></div>
+													<div class="cell split-3"></div>
+													<div *ngFor="let Tasks of DaysVal.PackTasks; let k = index ">
+														<div class="sec-task" *ngIf="Tasks.style" [ngStyle]="Tasks.style" #popper1
+									[popper]="popper1Content"
+									[popperTrigger]="'hover'"
+									[popperDisableStyle] = "false"
+									[popperPlacement]="'auto'">
+															<div class="task-title" [ngStyle]="Tasks.stylebreif">{{Tasks.Description}}</div>
+															<!-- To do:verify the condition-->
+															<div class="sub-task">
+																<p>{{Tasks.ProductDiamension}}</p>
+																<p>{{Tasks.ColdEndManning}}</p>
+															</div>
+															<div class="sub-task">
+																<p>{{Tasks.ItemNumber}}</p>
+															</div>
+														</div>
+														<div (click)="onTap($event)" class="sec-task" *ngIf="Tasks.TaskType === 'Maintenance' && Tasks.style" [ngStyle]="Tasks.style"  #popper1
+														[popper]="popper1Content"
+														[popperTrigger]="'hover'"
+														[popperDisableStyle] = "false"
+														[popperPlacement]="'auto'">
+															<h4 style="text-align:center">
+																<br/> {{Tasks.Description}}</h4>
+														</div>
+														<div (click)="onTap($event)" class="sec-task {{Tasks.className}}" *ngIf="!Tasks.TaskType ==='GlobblingRnD' && Tasks.style"  [ngStyle]="Tasks.style"  #popper1
+														[popper]="popper1Content"
+														[popperTrigger]="'hover'"
+														[popperDisableStyle] = "false"
+														[popperPlacement]="'auto'">
+															<h4 style="text-align:center"><br/>{{Tasks.Description}}</h4>
+														</div>
+														<div class="sec-task" *ngIf="Tasks.style && Tasks.TaskType !== 'Maintenance' && Tasks.TaskType !=='GlobblingRnD'" [ngStyle]="Tasks.style" #popper1
+									[popper]="popper1Content"
+									[popperTrigger]="'hover'"
+									[popperDisableStyle] = "false"
+									[popperPlacement]="'auto'">
+															<div class="task-title" [ngStyle]="Tasks.stylebreif">{{Tasks.Description}}</div>
+															<div class="sub-task">
+																<p>{{Tasks.ProductDiamension}}</p>
+																<p>{{Tasks.ColdEndManning}}</p>
+															</div>
+															<div class="sub-task">
+																<p>{{Tasks.ItemNumber}}</p>
+															</div>
+														</div>
+														<popper-content #popper1Content>
+															<h6>{{Tasks.Description}}</h6>
+															<p> {{Tasks.ProductDiamension}} {{Tasks.ItemNumber}} {{Tasks.ColdEndManning}}
+																<span>/hr</span>
+																<br/>
+																{{Tasks.BeginDate| date : 'MM/dd/yyyy'}} {{Tasks.BeginDate| date : 'shortTime'}}  {{Tasks.EndDate| date : 'MM/dd/yyyy'}} {{Tasks.EndDate| date : 'shortTime'}}
+																<br/>
+																<span>Min-Max quantity</span> {{Tasks.QuantItems}}
+																<span>-</span>{{Tasks.QuantItemsMax}}
+																<span>pcs</span>
+																<br/>{{Tasks.ShipComment1}}
+																<br/>
+																<br/>{{Tasks.ShipComment2}}
+															</p>
+														</popper-content>
+													</div>
+												</div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</perfect-scrollbar>
+						</div>
+						<!-- table Body Ends Here -->
+						<!-- table Footer Starts Here -->
+						<table class="custom-table">
+							<tfoot>
+								<tr class="foot-summary">
+									<td class="col-title">
+										<h6 class="crew-tot">Crew</h6>
+									</td>
+									<td class="col-wks">
+										<div class="col-wk col cust-p" *ngFor="let Tasks of packShiftsByDay; let i = index">
+											<div class="cell split-3">{{Tasks[0].CrewName}}</div>
+											<div class="cell split-3">{{Tasks[1].CrewName}}</div>
+											<div class="cell split-3">{{Tasks[2].CrewName}}</div>
+										</div>
+									</td>
+								</tr>
+								<tr class="foot-summary">
+									<td class="col-title tot-td">
+										<table class="tot-table">
+											<tr>
+												<td>
+													<h6 class="crew-tot">Total On</h6>
+												</td>
+												<td class="split-td">
+													<div *ngFor="let hours of hourList; let i = index">{{hours.ManningHourTimeSlot}}</div>
+												</td>
+											</tr>
+										</table>
+									</td>
+									<td class="col-wks tot-wks">
+										<div class="col-wk col cust-p" *ngFor="let days of packShiftsByDay; let i = index">
+											<div class="cell split-3 tot-time-split" *ngFor="let shift of days; let j = index">
+												<table>
+													<tr>
+														<td>
+															<div *ngFor="let hours of shift.ManningHours; let k = index">
+																<span *ngIf="k===0">{{hours.ColdEndManning}}</span>
+																<span *ngIf="k>0"> {{hours.ColdEndManning}} </span>
+															</div>
+														</td>
+													</tr>
+												</table>
+											</div>
+										</div>
+									</td>
+								</tr>
+								<tr class="foot-summary">
+									<td class="col-title"><div class="TooltpPopperBox1">Total needed per crew <i class="infoIcon"  #popper5
+							[popper]="'Total needed per crew = Weighted Average of [Highest no + Most repeated highest no] + (Loaders * 1.125) + Overman_BU + TPIN watcher + Housekeeper'"
+							[popperTrigger]="'hover'"
+							[popperPlacement]="'top-start'"
+							[popperTarget]="popperTargetElement"></i> </div></td>
+									<td class="col-wks">
+										<div class="col-wk col cust-p" *ngFor="let Tasks of packShiftsByDay; let i = index">
+											<div class="cell split-3">{{Tasks[0].TotalNeededPerCrew}}</div>
+											<div class="cell split-3">{{Tasks[1].TotalNeededPerCrew}}</div>
+											<div class="cell split-3">{{Tasks[2].TotalNeededPerCrew}}</div>
+										</div>
+									</td>
+								</tr>
+								<tr class="foot-summary">
+									<td class="col-title " title="">
+										<div class="TooltpPopperBox2">
+											<span class="positive" style="padding: 2px;">Extra</span> / <span class="negative" style="padding: 2px;">Short</span> <i class="infoIcon" #popper5
+									[popper]="'Extra/Short = Crew Level + M-F Crew Level – Total needed per crew – Vacation – Absent'"
+									[popperTrigger]="'hover'"
+									[popperPlacement]="'top-start'"
+									[popperTarget]="popperTargetElement"></i>
+										</div>
+									</td>
+									<td class="col-wks">
+										<div class="col-wk col cust-p" *ngFor="let Tasks of packShiftsByDay; let i = index">
+											<div class="cell split-3 status-more" [ngClass]="{'negative':Tasks[0].ExtraPeople < 0,'positive':Tasks[0].ExtraPeople >= 0}">{{Tasks[0].ExtraPeople}}</div>
+											<div class="cell split-3 status-less" [ngClass]="{'negative':Tasks[1].ExtraPeople < 0,'positive':Tasks[1].ExtraPeople >= 0}">{{Tasks[1].ExtraPeople}}</div>
+											<div class="cell split-3 status-less" [ngClass]="{'negative':Tasks[2].ExtraPeople < 0,'positive':Tasks[2].ExtraPeople >= 0}">{{Tasks[2].ExtraPeople}}</div>
+										</div>
+									</td>
+								</tr>
+								<tr class="foot-summary">
+									<td class="col-title">Other Details
+										<a class="link-view {{toggleIcon}}" (click)="onViewLessMore()">{{ViewLessMoreTitle}}
+											<i class="icon-arrow-toggle"></i>
+										</a>
+									</td>
+									<td class="col-wks">
+										<div class="col-wk col cust-p">
+											<div class="cell split-3">&nbsp;</div>
+											<div class="cell split-3">&nbsp;</div>
+											<div class="cell split-3">&nbsp;</div>
+										</div>
+										<div class="col-wk col cust-p">
+											<div class="cell split-3">&nbsp;</div>
+											<div class="cell split-3">&nbsp;</div>
+											<div class="cell split-3">&nbsp;</div>
+										</div>
+										<div class="col-wk col cust-p">
+											<div class="cell split-3">&nbsp;</div>
+											<div class="cell split-3">&nbsp;</div>
+											<div class="cell split-3">&nbsp;</div>
+										</div>
+										<div class="col-wk col cust-p">
+											<div class="cell split-3">&nbsp;</div>
+											<div class="cell split-3">&nbsp;</div>
+											<div class="cell split-3">&nbsp;</div>
+										</div>
+										<div class="col-wk col cust-p">
+											<div class="cell split-3">&nbsp;</div>
+											<div class="cell split-3">&nbsp;</div>
+											<div class="cell split-3">&nbsp;</div>
+										</div>
+										<div class="col-wk col cust-p">
+											<div class="cell split-3">&nbsp;</div>
+											<div class="cell split-3">&nbsp;</div>
+											<div class="cell split-3">&nbsp;</div>
+										</div>
+										<div class="col-wk col cust-p">
+											<div class="cell split-3">&nbsp;</div>
+											<div class="cell split-3">&nbsp;</div>
+											<div class="cell split-3">&nbsp;</div>
+										</div>
+									</td>
+								</tr>
+							</tfoot>
+						</table>
+						<div class="table-more show" *ngIf="onViewLessMoreStatus">
+							<table class="custom-table">
+								<tr>
+									<td class="col-title">Overman / BU</td>
+									<td class="col-wks">
+										<div class="col-wk col cust-p" *ngFor="let Tasks of packShiftsByDay; let i = index">
+											<div class="cell split-3">{{Tasks[0].CrewPerShift.ManningRoleAssignments.OvermanBU}}</div>
+											<div class="cell split-3">{{Tasks[1].CrewPerShift.ManningRoleAssignments.OvermanBU}}</div>
+											<div class="cell split-3">{{Tasks[2].CrewPerShift.ManningRoleAssignments.OvermanBU}}</div>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td class="col-title">Housekeeper</td>
+									<td class="col-wks">
+										<div class="col-wk col cust-p" *ngFor="let Tasks of packShiftsByDay; let i = index">
+											<div class="cell split-3">{{Tasks[0].CrewPerShift.ManningRoleAssignments.HouseKeeper}}</div>
+											<div class="cell split-3">{{Tasks[1].CrewPerShift.ManningRoleAssignments.HouseKeeper}}</div>
+											<div class="cell split-3">{{Tasks[2].CrewPerShift.ManningRoleAssignments.HouseKeeper}}</div>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td class="col-title">Loaders</td>
+									<td class="col-wks">
+										<div class="col-wk col cust-p" *ngFor="let Tasks of packShiftsByDay; let i = index">
+											<div class="cell split-3">{{Tasks[0].CrewPerShift.ManningRoleAssignments.Loaders}}</div>
+											<div class="cell split-3">{{Tasks[1].CrewPerShift.ManningRoleAssignments.Loaders}}</div>
+											<div class="cell split-3">{{Tasks[2].CrewPerShift.ManningRoleAssignments.Loaders}}</div>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td class="col-title">TPIN Watchers</td>
+									<td class="col-wks">
+										<div class="col-wk col cust-p" *ngFor="let Tasks of packShiftsByDay; let i = index">
+											<div class="cell split-3">{{Tasks[0].CrewPerShift.ManningRoleAssignments.TPINWatcher}}</div>
+											<div class="cell split-3">{{Tasks[1].CrewPerShift.ManningRoleAssignments.TPINWatcher}}</div>
+											<div class="cell split-3">{{Tasks[2].CrewPerShift.ManningRoleAssignments.TPINWatcher}}</div>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td class="col-title">Vacation</td>
+									<td class="col-wks">
+										<div class="col-wk col cust-p" *ngFor="let Tasks of packShiftsByDay; let i = index">
+											<div class="cell split-3">{{Tasks[0].CrewPerShift.ManningRoleAssignments.Vacation}}</div>
+											<div class="cell split-3">{{Tasks[1].CrewPerShift.ManningRoleAssignments.Vacation}}</div>
+											<div class="cell split-3">{{Tasks[2].CrewPerShift.ManningRoleAssignments.Vacation}}</div>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td class="col-title">Absent</td>
+									<td class="col-wks">
+										<div class="col-wk col cust-p" *ngFor="let Tasks of packShiftsByDay; let i = index">
+											<div class="cell split-3">{{Tasks[0].CrewPerShift.ManningRoleAssignments.Absence}}</div>
+											<div class="cell split-3">{{Tasks[1].CrewPerShift.ManningRoleAssignments.Absence}}</div>
+											<div class="cell split-3">{{Tasks[2].CrewPerShift.ManningRoleAssignments.Absence}}</div>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td class="col-title">M-F Crew</td>
+									<td class="col-wks">
+										<div class="col-wk col cust-p" *ngFor="let Tasks of packShiftsByDay; let i = index">
+											<div class="cell split-3">{{Tasks[0].CrewPerShift.ManningRoleAssignments.MF_CREW}}</div>
+											<div class="cell split-3">{{Tasks[1].CrewPerShift.ManningRoleAssignments.MF_CREW}}</div>
+											<div class="cell split-3">{{Tasks[2].CrewPerShift.ManningRoleAssignments.MF_CREW}}</div>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td class="col-title">Crew Level</td>
+									<td class="col-wks">
+										<div class="col-wk col cust-p" *ngFor="let Tasks of packShiftsByDay; let i = index">
+											<div class="cell split-3">{{Tasks[0].CrewPerShift.ManningRoleAssignments.CrewLevel}}</div>
+											<div class="cell split-3">{{Tasks[1].CrewPerShift.ManningRoleAssignments.CrewLevel}}</div>
+											<div class="cell split-3">{{Tasks[2].CrewPerShift.ManningRoleAssignments.CrewLevel}}</div>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<!-- table Footer Ends Here -->
+				</div>
+				<!-- Table Holder Ends Here -->
+				<!-- Bottom Section Starts Here -->
+				<div class="button-controls pull-right">
+					<!-- <button class="btn btn-blue">Calculate Manning</button> -->
+					<button *ngIf="!simulate && manningAccess === true" class="btn btn-blue" (click)="viewSimulation()">View Simulation</button>
+					<button class="btn btn-blue" (click)="refreshManning()">Refresh Task</button>
+					<button *ngIf="!simulate" class="btn btn-border-blue" (click)="onPrint()">Print</button>
+					<!-- <button class="btn btn-blue">Save</button> -->
+					<!-- <button class="btn btn-blue">Export</button> -->
+				</div>
+				<!-- Bottom Section Ends Here -->
+			</div>
+	</div>
+</section>
+<!-- export popup -->
+<div class="popup-wrapper export-popup popup-visible" *ngIf="createExport">
+	<div class="popup-overlay"></div>
+	<div class="popup-container">
+		<div class="vertical-main">
+			<div class="vertical-content">
+				<div class="popup-content">
+					<h4 class="pop-title">Select Week</h4>					
+					<div class="pop-body">
+						<div class="row">
+							<!-- <div class="col-12">
+								<span class="display-style">Print pack schedules for</span>
+							<div class="status-labels" >									
+									<div class="form-group" *ngFor="let popupDetails of ExportpopupDetails; let i = index">
+										<input type="checkbox" id="popupDetails-{{i}}"
+										[(ngModel)]="export[popupDetails.Name]">
+										<label for="popupDetails-{{i}}">{{popupDetails.Name}}</label>
+									</div>
+							</div>
+						</div> -->
+						<div class="col-12">
+								<div class="date-selection-wrapper text-datepicker">
+									<span>Select week : </span>
+									<div class="date-selector">
+										<i class="icon-previous" (click)="gotoPreviousWeek(exportDate)"></i>
+										<div class="date-range">{{weekstartExport}} - {{weekendExport}}
+											<input class="date-range datepickerInlineTextBox" date-only="true" id="exportDate" name="exportDate"
+											 #weekstartsExport ngui-datetime-picker [(ngModel)]="exportDate"  date-format="MM/DD/YYYY"
+											 parse-format="YYYY-MM-DD" [close-on-select]="true" [min-date]="date2MinDate" date-only="true" value="{{weekstartExport}}" readonly
+											 (ngModelChange)="convertToWeekDays(weekstartsExport.value)" >
+										</div>
+										<i class="icon-next" (click)="gotoNextWeek(exportDate)"></i>
+									</div>
+							</div>
+							</div>
+							<!-- <div class="col-12 week-selection-wrapper">
+								<span>Number of weeks : </span>
+								<input type="text" class="custom-textbox" [(ngModel)]="weekcountExport" onkeypress='return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46'
+								maxlength="4" step="0.01" max="5" min="0" onPaste="return false">
+							</div> -->
+						</div>
+					</div>
+					<div class="pop-footer m-t-20">
+						<button class="btn btn-popup-blue" (click)="cancelExport()">Cancel</button>
+						<button class="btn btn-popup-blue" (click)="continueExport()">Continue</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Task Detail Popup Starts Here -->
+<div class="popup-wrapper task-detail-popup">
+	<div class="popup-overlay"></div>
+	<div class="popup-container">
+		<div class="popup-content">
+			<h4 class="pop-title">Task Details
+				<a class="pull-right icon-close"></a>
+			</h4>
+			<div class="pop-body">
+				<h6>PILSNER 160Z BAVARIA 47.5CL</h6>
+				<p>P.O. 4309801 315360 x 9940690 (A)
+					<br/> 08.00 60.0 items/min 30 t/day 1x18</p>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Task Detail Popup Ends Here -->
+<router-outlet></router-outlet>
+<!--Loader-->
+<app-loader id="appLoader" [hidden]="!loading"></app-loader>

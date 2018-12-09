@@ -1,0 +1,152 @@
+<header class="app-header export-header">
+  <div class="form-container" id="headerContainer">
+    <button (click)="onPrint()">Print</button>
+    <a class="pull-right icon-close" (click)="closeExport()"></a>
+  </div>
+</header>
+
+<div class="export-wrapper">
+  <section class="A4 landscape">
+    <div class="sheet padding-10mm first">
+      <h4>Manning Estimation</h4>
+      <table *ngFor="let week of exportDetails; let k = index">
+        <tr class="sheet-head">
+          <td>
+            <table>
+              <tr class="week-line">
+                <th>
+                  <span>Week {{k+1}}</span>
+                  <div class="hrs"><span>Lines</span> </div>
+                </th>
+              </tr>
+            </table>
+          </td>
+          <td>
+            <table>
+              <tr>
+                  <th *ngFor="let days of week.weekdays">{{days.DisplayName}}<div class="hrs"><span>12 AM</span><span>8 AM</span><span>4 PM</span></div> </th>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr class="task-shade">
+          <td>
+            <span>Primary</span>
+          </td>
+          <td class="col-wks">
+            <div class="col-wk col" *ngFor="let schedule of week.Estimations; let i = index">
+              <div class="cell" *ngFor="let shift of schedule.ManningShifts; let j = index">{{shift.PrimaryPackCount}}</div>
+            </div>
+          </td>
+        </tr>
+        <tr class="task-shade">
+          <td>
+            <span>Decor</span>
+          </td>
+          <td class="col-wks">
+            <div class="col-wk col" *ngFor="let schedule of week.Estimations; let i = index">
+              <div class="cell" *ngFor="let shift of schedule.ManningShifts; let j = index">{{shift.DecorPackCount}}</div>
+            </div>
+          </td>
+        </tr>
+        <tr class="task-shade">
+          <td>
+            <span>VAP</span>
+          </td>
+          <td class="col-wks">
+            <div class="col-wk col" *ngFor="let schedule of week.Estimations; let i = index">
+              <div class="cell" *ngFor="let shift of schedule.ManningShifts; let j = index">{{shift.VapPackCount}}</div>
+            </div>
+          </td>
+        </tr>
+        <tr class="task-shade">
+          <td>
+            <span>Miscellaneous</span>
+          </td>
+          <td class="col-wks">
+            <div class="col-wk col" *ngFor="let schedule of week.Estimations; let i = index">
+              <div class="cell" *ngFor="let shift of schedule.ManningShifts; let j = index">{{shift.MiscPackCount}}</div>
+            </div>
+          </td>
+        </tr>
+        <tr class="task-shade">
+          <td>
+            <span>House Keeping & TI Watcher</span>
+          </td>
+          <td class="col-wks">
+            <div class="col-wk col" *ngFor="let schedule of week.Estimations; let i = index">
+              <div class="cell" *ngFor="let shift of schedule.ManningShifts; let j = index">{{shift.ManningRoleAssignments.HouseKeeper + shift.ManningRoleAssignments.TPINWatcher}}</div>
+            </div>
+          </td>
+        </tr>
+        <tr class="task-shade">
+          <td>
+            <span>Vacation</span>
+          </td>
+          <td class="col-wks">
+            <div class="col-wk col" *ngFor="let schedule of week.Estimations; let i = index">
+              <div class="cell" *ngFor="let shift of schedule.ManningShifts; let j = index">{{shift.CrewDetails.Vacation}}</div>
+            </div>
+          </td>
+        </tr>
+        <tr class="task-shade">
+          <td>
+            <span>Absent</span>
+          </td>
+          <td class="col-wks">
+            <div class="col-wk col" *ngFor="let schedule of week.Estimations; let i = index">
+              <div class="cell" *ngFor="let shift of schedule.ManningShifts; let j = index">{{shift.CrewDetails.Absence}}</div>
+            </div>
+          </td>
+        </tr>
+        <tr class="task-shade">
+          <td>
+            <span>Needed/Crew</span>
+          </td>
+          <td class="col-wks">
+            <div class="col-wk col" *ngFor="let schedule of week.Estimations; let i = index">
+              <div class="cell" *ngFor="let shift of schedule.ManningShifts; let j = index">{{shift.TotalNeededPerCrew}}</div>
+            </div>
+          </td>
+        </tr>
+        <tr class="task-shade">
+          <td>
+            <span>Crew Level</span>
+          </td>
+          <td class="col-wks">
+            <div class="col-wk col" *ngFor="let schedule of week.Estimations; let i = index">
+              <div class="cell" *ngFor="let shift of schedule.ManningShifts; let j = index">{{shift.CrewDetails.CrewLevel}}</div>
+            </div>
+          </td>
+        </tr>
+        <tr class="task-shade">
+          <td>
+            <span>M-F Crew</span>
+          </td>
+          <td class="col-wks">
+            <div class="col-wk col" *ngFor="let schedule of week.Estimations; let i = index">
+              <div class="cell" *ngFor="let shift of schedule.ManningShifts; let j = index">{{shift.ManningRoleAssignments.MF_CREW}}</div>
+            </div>
+          </td>
+        </tr>
+        <tr class="task-shade">
+          <td>
+            <span>Extra/Short</span>
+          </td>
+          <td class="col-wks">
+            <div class="col-wk col" *ngFor="let schedule of week.Estimations; let i = index">
+              <div class="cell" [ngClass]="{'negative':shift.ExtraOrShort < 0,'positive':shift.ExtraOrShort >= 0}" *ngFor="let shift of schedule.ManningShifts; let j = index">{{shift.ExtraOrShort}}</div>
+            </div>
+          </td>
+        </tr>
+
+      </table>
+
+      <h5>(Total:
+        <span>1</span>/<span>1</span>) Printing date {{today}} Printed By: {{username}}</h5>
+
+    </div>
+  </section>
+</div>
+<!--Loader-->
+<app-loader id="appLoader" [hidden]="!loading"></app-loader>

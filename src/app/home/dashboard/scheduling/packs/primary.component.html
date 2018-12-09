@@ -1,0 +1,280 @@
+<section class="main-container clearfix  no-gutter-bottum">
+	<!-- Top Navigation Starts Here -->
+	<div class="top-section">
+		<ul class="page-nav"  *ngIf="!simulateFlag">
+			<li *ngFor="let button of productionLiButtons; let i = index" (click)="onLiBtnclick(button.name,i)" [class.current]="isLiItemClicked==button.name">
+				<a title="{{button.name}}">{{button.name}}</a>
+			</li>
+		</ul>
+
+		<div class="date-selector invisibleDatePicker pull-right">
+			<span class="plain-text">Date</span>
+			<i class="icon-previous" (click)="onPreviousWeekdate()"></i>
+			<!-- <span class="date-range">{{weekStartday}} – {{weekEndday}}</span> -->
+			<span class="date-range">{{weekStartday}} – {{weekEndday}}<input  class="date-range datepickerInlineTextBox" (ngModelChange)="weekPicker(weekstarts.value)"  date-only="true" id="weekstart" name="weekstart" #weekstarts ngui-datetime-picker [(ngModel)]="weekstart" [min-date]="date2MinDate"   date-format="MM/DD/YYYY" parse-format="YYYY-MM-DD" [close-on-select]="true" [default-value]="defaultDay" date-only="true" readonly>
+			</span>
+			<i class="icon-next" (click)="onFutureWeekdate()"></i>
+		</div>
+		<h2 *ngIf="!simulateFlag" class="page-title">{{pageHeader}}</h2>
+		<div class="back-nav" *ngIf="simulateFlag">
+			<h6>
+				<a class="icon-back" (click)="backFromSimulate()"></a>{{simulatedPage}}</h6>
+			<!-- <a class="icon-back" (click)="backFromSimulate()"></a>Primary Production Tasks</h6> -->
+		</div>
+	</div>
+
+	<div class="status-labels">
+		<h4 *ngFor="let legend of legendData; let i = index">
+			<span [style.background-color]="legend.TaskStatusColor"></span>{{legend.TaskStatusName}}
+		</h4>
+	</div>
+	<!-- Top Navigation Ends Here -->
+</section>
+
+<section>
+	<div class="sticky-container">
+		<sticky  sticky-offset-top="68" sticky-zIndex="10" sticky-parent="true" sticky-width="auto" sticky-class="stickyBox" sticky-end-class="stickyBox-unset">
+			<div class="main-container-no-gutters">
+				<div class="sticky-content">
+					<table class="custom-table">
+					<!-- table Header Starts Here -->
+					<thead>
+						<tr>
+							<th class="col-title">{{selecedLine}}</th>
+							<th class="col-wks">
+								<div class="col-wk col" [class.current]="day.IsCurrentDay === true" *ngFor="let day of weekDays; let i = index">{{day.DisplayName}}</div>
+							</th>
+						</tr>
+					</thead>
+					<!-- table Header Ends Here -->
+					<!-- Time slot Starts Here -->
+					<tbody>
+						<tr class="col-sub">
+							<td class="col-title"></td>
+							<td class="col-wks">
+								<div class="col-wk col {{time.status}}" *ngFor="let time of timeSlot; let i = index">
+									<div class="cell split-3">{{time.first12}}</div>
+									<div class="cell split-3">{{time.middle8}}</div>
+									<div class="cell split-3">{{time.last4}}</div>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+					<!-- Time slot ends Here -->
+				</table>
+			</div>
+		</div>
+		</sticky>
+		<div class="main-container-no-gutters main-container-with-bottom-gutter">
+			<!-- Table Holder Starts Here -->
+			<div class="table-holder m-b-40 sticky-container">
+
+				<!-- table Body Starts Here -->
+				<div class="scrollable-body">
+					<perfect-scrollbar>
+						<table class="custom-table scroll-table">
+							<tbody>
+								<tr class="data-cols" *ngFor="let FormingLine of formLines; let i = index">
+									<td class="col-title">{{FormingLine.LineName}}</td>
+									<td class="col-wks">
+										<!-- single column starts Here -->
+										<div class="col-wk col" *ngFor="let DaysVal of FormingLine.Days; let j = index" [class.current]="DaysVal.IsCurrentDay === true">
+											<div class="cell split-3"> </div>
+											<div class="cell split-3"></div>
+											<div class="cell split-3"></div>
+											<div *ngFor="let Tasks of DaysVal.PackTasks; let k = index ">
+												<div class="sec-task {{Tasks.className}}" *ngIf="Tasks.style" [ngStyle]="Tasks.style" #popper1
+							[popper]="popper1Content"
+							[popperTrigger]="'hover'"
+							[popperDisableStyle] = "false"
+							[popperPlacement]="'auto'">
+													<div class="task-title" [ngStyle]="Tasks.stylebreif">{{Tasks.Description}}</div>
+													<!-- To do:verify the condition-->
+													<div class="sub-task">
+														<p>{{Tasks.ProductDiamension}}</p>
+														<p>{{Tasks.ColdEndManning}}</p>
+													</div>
+													<div class="sub-task">
+														<p>{{Tasks.ItemNumber}}</p>
+														<!-- <p>2.25</p> -->
+													</div>
+												</div>
+												<div (click)="onTap($event)" class="sec-task {{Tasks.className}}" *ngIf="Tasks.TaskType === 'Maintenance' && Tasks.style" [ngStyle]="Tasks.style"  #popper1
+												[popper]="popper1Content"
+												[popperTrigger]="'hover'"
+												[popperDisableStyle] = "false"
+												[popperPlacement]="'auto'">
+													<h4 style="text-align:center"><br/> {{Tasks.Description}}</h4>
+												</div>
+												<div (click)="onTap($event)" class="sec-task {{Tasks.className}}" *ngIf="Tasks.TaskType ==='GlobblingRnD' && Tasks.style"  [ngStyle]="Tasks.style"  #popper1
+												[popper]="popper1Content"
+												[popperTrigger]="'hover'"
+												[popperDisableStyle] = "false"
+												[popperPlacement]="'auto'">
+													<h4 style="text-align:center"><br/>{{Tasks.Description}}</h4>
+												</div>
+												<div class="sec-task {{Tasks.className}}" *ngIf="Tasks.style && Tasks.TaskType !== 'Maintenance' && Tasks.TaskType !=='GlobblingRnD'" [ngStyle]="Tasks.style" #popper1
+							[popper]="popper1Content"
+							[popperTrigger]="'hover'"
+							[popperDisableStyle] = "false"
+							[popperPlacement]="'auto'">
+													<div class="task-title" [ngStyle]="Tasks.stylebreif">{{Tasks.Description}}</div>
+													<div class="sub-task">
+														<p>{{Tasks.ProductDiamension}}</p>
+														<p>{{Tasks.ColdEndManning}}</p>
+													</div>
+													<div class="sub-task">
+														<p>{{Tasks.ItemNumber}}</p>
+														<!-- <p>2.25</p> -->
+													</div>
+												</div>
+												<popper-content #popper1Content>
+													<h6>{{Tasks.Description}}</h6>
+													<p> {{Tasks.ProductDiamension}} {{Tasks.ItemNumber}} {{Tasks.ColdEndManning}}
+														<span>/hr</span>
+														<br/>
+														{{Tasks.BeginDate| date : 'MM/dd/yyyy'}} {{Tasks.BeginDate| date : 'shortTime'}}  {{Tasks.EndDate| date : 'MM/dd/yyyy'}} {{Tasks.EndDate| date : 'shortTime'}}
+														<br/>
+														<span>Min-Max quantity</span> {{Tasks.QuantItems}}
+														<span>-</span>{{Tasks.QuantItemsMax}}
+														<span>pcs</span>
+														<br/>{{Tasks.ShipComment1}}
+														<br/>
+														<br/>{{Tasks.ShipComment2}}
+													</p>
+												</popper-content>
+											</div>
+										</div>
+
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</perfect-scrollbar>
+				</div>
+				<!-- table Body Ends Here -->
+				<!-- table Footer Starts Here -->
+				<table class="custom-table">
+					<tfoot>
+						<!-- <tr class="foot-summary">
+
+												<td class="col-title">Total People</td>
+												<td class="col-wks">
+														<div class="col-wk col cust-p" *ngFor="let Tasks of packShifts; let i = index">
+																<div class="cell split-3">
+																		{{Tasks.ShiftsPerDay[0].TotalManningPerShift}}
+																</div>
+																<div class="cell split-3">{{Tasks.ShiftsPerDay[1].TotalManningPerShift}}</div>
+																<div class="cell split-3">{{Tasks.ShiftsPerDay[2].TotalManningPerShift}}</div>
+														</div>
+
+												</td>
+										</tr> -->
+						<tr class="foot-summary">
+							<td class="col-title">
+								<h6 class="crew-tot">Crew</h6>
+							</td>
+							<td class="col-wks">
+								<!-- <div class="col-wk col cust-p" *ngFor="let Tasks of packShifts; let i = index">
+									<div class="cell split-3">{{Tasks.ShiftsPerDay[0].CrewName}}</div>
+									<div class="cell split-3">{{Tasks.ShiftsPerDay[1].CrewName}}</div>
+									<div class="cell split-3">{{Tasks.ShiftsPerDay[2].CrewName}}</div>
+								</div> -->
+								<div class="col-wk col cust-p" *ngFor="let days of packShiftsByDay; let i = index">
+									<div class="cell split-3" *ngFor="let shift of days;">{{shift.CrewName}}</div>
+								</div>
+							</td>
+						</tr>
+						<tr class="foot-summary">
+							<td class="col-title tot-td">
+								<table class="tot-table">
+									<tr>
+										<td>
+											<h6 class="crew-tot">Total On</h6>
+										</td>
+										<td class="split-td">
+											<div *ngFor="let hours of hourList; let i = index">{{hours.ManningHourTimeSlot}}</div>
+										</td>
+									</tr>
+								</table>
+							</td>
+							<td class="col-wks tot-wks">
+								<div class="col-wk col cust-p" *ngFor="let days of packShiftsByDay; let i = index">
+									<div class="cell split-3 tot-time-split" *ngFor="let  shift of days; let j = index">
+										<table>
+											<tr>
+												<td>
+													<div *ngFor="let hours of shift.ManningHours; let k = index">
+														<span *ngIf="k===0">{{hours.ColdEndManning}}</span>
+														<span *ngIf="k>0"> {{hours.ColdEndManning}} </span>
+													</div>
+												</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</td>
+						</tr>
+						<tr class="foot-summary">
+							<td class="col-title">
+								<h6 class="crew-tot">Weighted Average</h6>
+							</td>
+							<td class="col-wks">
+								<div class="col-wk col cust-p" *ngFor="let days of packShiftsByDay; let i = index">
+									<div class="cell split-3" *ngFor="let shift of days;">{{shift.TotalManningPerShift}}</div>
+								</div>
+							</td>
+						</tr>
+				</table>
+
+				<!-- table Footer Ends Here -->
+			</div>
+			<!-- Table Holder Ends Here -->
+
+			<!-- Bottom Section Starts Here -->
+			<!-- <div class="status-labels">
+		        <h4>
+		            <span style="background-color: rgba(247, 223, 1,.9);"></span>Created in Ingress</h4>
+		        <h4>
+		            <span style="background-color: rgba(195, 240, 233,.9);"></span>In Production</h4>
+		        <h4>
+		            <span style="background-color: rgba(199, 75, 4, 0.815);"></span>Suspended</h4>
+		        <h4>
+		            <span style="background-color: rgba(36, 199, 4, 0.815);"></span>Completed</h4>
+		        <h4>
+		            <span style="background-color: rgba(166, 166, 245, 0.815);"></span>Dummy</h4>
+		    </div> -->
+			<!-- <div class="status-labels">
+				<h4 *ngFor="let legend of legendData; let i = index">
+					<span [style.background-color]="legend.TaskStatusColor"></span>{{legend.TaskStatusName}}
+				</h4>
+			</div> -->
+			<div class="button-controls pull-right" *ngIf="!simulateFlag">
+				<button class="btn btn-blue" (click)="onSimulateChange()" *ngIf="viewFlag!='Set And Pack'&&(access === true)">View Simulation</button>
+				<button class="btn btn-blue" (click)="onRefrersh()">Refresh Task</button>
+				<!-- <button class="btn btn-blue">Export</button> -->
+			</div>
+			<!-- Bottom Section Ends Here -->
+		</div>
+	</div>
+</section>
+<!-- Task Detail Popup Starts Here -->
+<div class="popup-wrapper task-detail-popup">
+	<div class="popup-overlay"></div>
+	<div class="popup-container">
+		<div class="popup-content">
+			<h4 class="pop-title">Task Details
+				<a class="pull-right icon-close"></a>
+			</h4>
+			<div class="pop-body">
+				<h6>PILSNER 160Z BAVARIA 47.5CL</h6>
+				<p>P.O. 4309801 315360 x 9940690 (A)
+					<br/> 08.00 60.0 items/min 30 t/day 1x18</p>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Task Detail Popup Ends Here -->
+<router-outlet></router-outlet>
+<!--Loader-->
+<app-loader id="appLoader" [hidden]="!loading"></app-loader>

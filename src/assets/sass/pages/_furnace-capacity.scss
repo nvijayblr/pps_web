@@ -1,0 +1,381 @@
+.furnace{
+	.border-right{
+		border-right: 1px solid #d1d1d1;
+	}
+	.form-group {
+	    display: block;
+	    margin-bottom: rem(20);
+	    label {
+	        display: block;
+	        max-width: 100%;
+	        color: black;
+	        font-size: rem(14);
+	        line-height: 1;
+	        margin-bottom: rem(10);
+	    }
+	}
+	.form-control {
+	    display: block;
+	    width: 100%;
+	    height: auto;
+	    min-height: rem(35);
+	    padding: rem(11) rem(16);
+	    border-radius: rem(4);
+	    font-size: rem(14);
+	    line-height: 1;
+	    color:#000;
+	    background-color: #fff;
+	    background-image: none;
+	    border: 1px solid #e1dfdf;
+	    @include vendor-prefix(box-shadow, 0px 2px 2.9px 0.1px rgba(149, 150, 150, 0.13));
+	    &:focus {
+	        outline: 0;
+	    }
+	    &.error {
+	        border: 1px solid red;
+	    }
+
+			label {
+	        display: block;
+	        max-width: 100%;
+	        color: black;
+	        font-size: rem(14);
+	        line-height: 1;
+	        margin-bottom: rem(10);
+	    }
+	}
+	.form-control[disabled] {
+	    cursor: not-allowed;
+	    background-color: #ececec;
+	}
+	.select-down{
+	    position: relative;
+	    &::before{
+	        pointer-events: none;
+	        content: "";
+	        position: absolute;
+	        top:2.2rem;
+	        right: 1.6rem;
+	        border: solid #368ef8;
+	        border-width: 0 1px 1px 0;
+	        display: inline-block;
+	        padding: 3px;
+	        @include transform (rotate(45deg));
+	    }
+	    select{
+	      appearance:none;
+	      -webkit-appearance:none;
+	      -moz-appearance:none;
+	      -ms-appearance:none;
+	    }
+			label {
+	        display: block;
+	        max-width: 100%;
+	        color: black;
+	        font-size: rem(14);
+	        line-height: 1;
+	        margin-bottom: rem(10);
+					clear: both;
+	    }
+	}
+	.custom-select {
+	    display: inline-block;
+	    max-width: 100%;
+	    line-height: 1.25;
+	    vertical-align: middle;
+	    // background: #fff url("/assets/images/arrow-down.png") no-repeat right rem(12) center;
+	    background-size: rem(13) rem(8);
+	    -webkit-appearance: none;
+	    -moz-appearance: none;
+	    appearance: none;
+	}
+	.control {
+    display: block;
+    position: relative;
+    padding-left: rem(35);
+    margin-bottom: rem(20);
+    font-size: rem(14);
+    color:black;
+    line-height: rem(25);
+    cursor: pointer;
+    input {
+        position: absolute;
+        z-index: -1;
+        opacity: 0;
+    }
+    .control-indicator {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: rem(25);
+        height: rem(25);
+        border: solid 1px #b7b8b7;
+        border-radius: rem(4);
+        @include vendor-prefix(box-shadow,
+        0px 2px 2.9px 0.1px rgba(149, 150, 150, 0.13));
+    }
+	}
+	.line-control{
+		display: inline-block;
+		width: 33.33%;
+		border: none;
+		border-bottom: 1px solid #e1dfdf;
+		box-shadow: none;
+		border-radius: 0;
+		padding-left: 0;
+		padding-right: 0;
+		appearance:none;
+		-webkit-appearance:none;
+		-moz-appearance:none;
+		-ms-appearance:none;
+		padding: 0;
+		min-height: inherit;
+		padding-bottom: 0.2rem;
+		height: 1.2rem;
+	}
+	h6{
+		margin: 1rem 0;
+		color: black;
+		font-family: 'Arial-BoldMT';
+	}
+	.task-blk{
+		border: 1px solid #d1d1d1;
+		padding: 1rem;
+
+		.edit-content{
+			border: none;
+			.box{
+				label,
+				h6,
+				select,
+				input,
+				.font-fix{
+					font-size: 1.05rem !important;
+				}
+				width: 100%;
+				padding: 2.5%;
+				border: 1px solid #d1d1d1;
+				border-radius: 0.3rem;
+				@include vendor-prefix(box-shadow, 0px 2px 2.9px 0.1px rgba(149, 150, 150, 0.13));
+
+				.button-group-box{
+					button{
+						margin-right: 0.2rem !important;
+						&:last-child{
+							margin-right: inherit;
+						}
+					}
+				}
+			}
+			.date-range-label{
+				height: 1rem;
+		    margin-bottom: 0.5rem;
+		    display: inline-block;
+			}
+		}
+
+		.defulat-capacity span{
+			strong{
+				font-family: 'Arial-BoldMT';
+				margin-right: 0.5rem;
+				display: inline-block;
+				font-size: 1.05rem;
+			}
+			margin: 1rem 0;
+			display: inline-flex;
+			font-size: 1.05rem;
+		}
+	}
+	.pop-table-holder{
+		table{
+			border: 1px solid #d1d1d1;
+			text-align: center;
+		}
+		th{
+			font-family: 'Arial-BoldMT';
+			font-size: 1.2rem;
+			padding-top: 1.5rem;
+			padding-bottom: 1.5rem;
+			background-color: #fff;
+			border-right: 1px solid #d1d1d1;
+			text-align: center;
+			&:last-child{
+				border-right:none;
+			}
+		}
+		td{
+			border-right: 1px solid #d1d1d1;
+			text-align: center;
+			input{
+				text-align: center;
+			}
+			&:last-child{
+				border-right:none;
+			}
+		}
+		tr:nth-child(even) {background: #e4eaef;}
+		tr:nth-child(odd) {background: #FFF;}
+	}
+	.editable-text{
+		border: none;
+		background: transparent !important;
+		width: 2.7rem;
+		padding-bottom: 0.1rem;
+		border-bottom: 1px solid #dfdfdf;
+		margin-top: -0.2rem;
+		margin-right:0;
+		appearance:none;
+		-webkit-appearance:none;
+		-o-appearance:none;
+		-moz-appearance:none;
+		-ms-appearance:none;
+		text-align: center;
+		font-size: 1rem;
+		margin-bottom: -0.5rem;
+		height: 1.5rem;
+	}
+	.editable-text[disabled]{
+		border: none;
+	}
+	.retriver-button{
+		height: 1rem;
+    width: 1rem;
+    border: none;
+    background: transparent;
+		background: url("../images/retrieveicon.svg") center left rem(16) no-repeat;
+		background-size: 100%;
+		background-position: center;
+		display: inline-block;
+		position: relative;
+		top: 0.2rem;
+		margin-left: 0.8rem;
+	}
+	.datepicker-icon{
+		.ngui-datetime-picker-wrapper{
+			position: relative;
+			&:before{
+				position: absolute;
+				content: "\E90B";
+				color: #368ef8;
+				font-size: 1.2rem;
+				font-family: 'icomoon' !important;
+				top: 0.8rem;
+				right: 0.6rem;
+				z-index: 1;
+			}
+			input{
+				cursor: pointer;
+				position: relative;
+				z-index: 2;
+				background-color: transparent;
+				font-size: 1rem;
+			}
+			ngui-datetime-picker{
+				z-index: 5;
+			}
+		}
+	}
+
+	.edit-button{
+		height: 1.2rem;
+    width: 1.2rem;
+		margin: 0 0.1rem;
+		@extend .retriver-button;
+		background: url("../images/edit.svg") center left rem(16) no-repeat;
+		background-size: 100% 96%;
+    background-position: center;
+	}
+	.save-button{
+		height: 1.1rem;
+    width: 1rem;
+		margin: 0 0.1rem;
+		@extend .retriver-button;
+		background: url("../images/save-icon.svg") center left rem(16) no-repeat;
+		background-size: 100% 100%;
+    background-position: center;
+	}
+	.close-button{
+		height: 1.5rem;
+    width: 1.5rem;
+		margin: 0 0.1rem;
+		@extend .retriver-button;
+		background: url("../images/close-icon.svg") center left rem(16) no-repeat;
+		background-size: 100% 100%;
+    background-position: 0rem 0.2rem;
+	}
+	.delete-button{
+		height: 1.2rem;
+    width: 1.2rem;
+		margin: 0 0.1rem;
+		@extend .retriver-button;
+		background: url("../images/delete.svg") center left rem(16) no-repeat;
+		background-size: 100% 96%;
+    background-position: center;
+	}
+
+	.editable-table{
+		.line-control{
+			display: inline-block;
+			width: 100%;
+			border-bottom: 1px solid #e1dfdf;
+			box-shadow: none;
+			border-radius: 0;
+			padding-left: 0;
+			padding-right: 0;
+			margin: 0;
+			padding-bottom: 0.2rem;
+			appearance:none;
+			-webkit-appearance:none;
+			-o-appearance:none;
+			-moz-appearance:none;
+			-ms-appearance:none;
+			font-size: 1.07rem;
+			background: transparent !important;
+			background-color: transparent !important;
+
+		}
+		.line-control[disabled]{
+			border: none;
+			cursor: inherit !important;
+		}
+	}
+	em{
+		color: red;
+	}
+	.retrive-tooltip{
+		div[role="popper"]{
+			background: #797979;
+	    color: white;
+			.ngxp__inner{
+				font-weight: normal;
+				font-family: $font-family;
+			}
+		}
+	}
+	.second-title{
+		margin-top: 3rem;
+	}
+}
+
+.btn-s-s{
+	width: 5.5rem;
+	padding: 0 !important;
+}
+.btn-s-m{
+	width: 7rem;
+	padding: 0 !important;
+}
+.label-bold{
+	font-size: 1.01rem !important;
+	color: black;
+	font-family: 'Arial-BoldMT';
+}
+.furance-table{
+	button[class^="icon-"], [class*=" icon-"] {
+		border: none;
+		background: transparent;
+		padding:0.01rem;
+		height: 1.2rem;
+		margin-top: -0.2rem;
+	}
+}

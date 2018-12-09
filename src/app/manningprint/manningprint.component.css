@@ -1,0 +1,470 @@
+/* Common CSS */
+@page { margin: 0 }
+/** For screen preview **/
+@media screen {
+  .sheet {
+    background: white;
+    box-shadow: 0 .5mm 2mm rgba(0,0,0,.3);
+    margin: 5mm;
+  }
+}
+
+@page {
+    size: portrait;
+}
+
+@media print{
+    body,
+    .export-wrapper{
+      background-color: white !important;
+    }
+    .app-header{
+      display: none !important;
+    }
+    section.A4.landscape .sheet {
+      page-break-after: always;
+      margin: 0;
+      padding: 0;
+      padding-top: 30px;
+    }
+    section.A4.landscape .sheet.first {
+      padding-top: 30px;
+    }
+    .sheet > table .task-forming-shade .cell{
+      background: #fff !important;
+      background-color: #fff !important;
+    }
+    .sheet > table .task-forming-shade .cell.negative{
+      background: rgb(250, 58, 58) !important;
+      background-color:rgb(250, 58, 58) !important;
+      color: black;
+    }
+    .sheet > table .task-forming-shade .cell.positive{
+      background: rgb(69, 250, 78) !important;
+      background-color:rgb(69, 250, 78) !important;
+      color: black;
+    }
+}
+/*Styles only for IE*/
+@media print and (-ms-high-contrast: active) and (-ms-high-contrast: none) {
+  section.A4.landscape .sheet {
+    page-break-before: always;
+    padding-top: 33px;
+    font-size: 6px !important;
+  }
+  section.A4.landscape .sheet.first{
+    page-break-after: auto;
+    page-break-before: auto;
+    padding-top: 0;
+  }
+  section .cell{
+    font-size: 6px !important;
+  }
+}
+
+.sheet {
+  overflow: hidden;
+  position: relative;
+  box-sizing: border-box;
+}
+
+/** Padding area **/
+.sheet.padding-10mm { padding: 10mm }
+.sheet.padding-15mm { padding: 15mm }
+.sheet.padding-20mm { padding: 20mm }
+.sheet.padding-25mm { padding: 25mm }
+
+.sheet{
+  font-size: 0.8rem;
+}
+.sheet table,
+.sheet thead,
+.sheet tbody,
+.sheet tfoot,
+.sheet tr,
+.sheet th,
+.sheet td {
+    /* display: block; */
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-collapse: inherit;
+    border-spacing: 0;
+    border-color: inherit;
+    vertical-align: inherit;
+    text-align: left;
+    font-weight: inherit;
+    -webkit-border-horizontal-spacing: 0;
+    -webkit-border-vertical-spacing: 0;
+    box-sizing: unset;
+    -webkit-box-sizing: unset;
+    -o-box-sizing: unset;
+    -ms-box-sizing: unset;
+    -moz-box-sizing: unset;
+}
+.sheet th, td {
+    display: block;
+    padding: 0.5rem 0;
+    height: 0.5rem;
+    float: left;
+}
+.sheet table{
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+.sheet h4{
+  padding: 1rem;
+  text-align: center;
+  font-size: 1.5rem;
+}
+.sheet h5{
+  padding: 1rem;
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.export-wrapper{
+  background: #e0e0e0;
+  padding:3rem;
+  width: 100%;
+  min-height: 100%;
+  height: auto;
+}
+.export-header{
+ height: auto;
+ top: 0;
+ z-index: 1500;
+}
+.app-header .form-container{
+  float: right;
+  margin: 0.5rem 0;
+  width: auto;
+}
+.app-header .form-container a{
+  margin-left: 0.5rem;
+  display: inline-block;
+  text-decoration: none;
+  font-size: 1.5rem;
+}
+.app-header .form-container button,
+.app-header .form-container a{
+  border: 0px;
+  border-radius: 3px;
+  padding: 0.8rem;
+  background-color: #368ef8;
+  font-size: 1rem;
+  color: white;
+}
+.app-header .form-container button:hover,
+.app-header .form-container a:hover{
+  background-color: #186ed6;
+}
+
+ /* Main Table  */
+.sheet > table{
+  width: 100%;
+  border: thin solid black;
+  position: relative;
+  padding-bottom: 0.1rem;
+  margin-bottom: 0.2rem;
+}
+.sheet > table::after{
+  position: absolute;
+  height: 100%;
+  content: '';
+  width: 2rem;
+  border-right: 1px solid black;
+  border-left: 1px solid black;
+  width: 0.2%;
+  left: 12.2%;
+  top: 0;
+  background-color: white;
+}
+.sheet > table tr td{
+  border-bottom: 1px solid #d0d0d0;
+  height: 1.6rem;
+}
+.sheet > table tr td:first-child{
+  width: 12.5%;
+}
+.sheet > table tr td:first-child span{
+  display: inline-block;
+}
+.sheet > table tr td:last-child{
+  width: 87.5%;
+}
+
+/* Sub Table */
+.sheet > table table tr th,
+.sheet > table .week-line{
+  text-align: center;
+  width: calc(14.288% - 0.1rem);
+  /* height: 2.8rem; */
+  height: auto;
+  padding: 0;
+  padding-top: 0.5rem;
+  border-right: 0.1rem solid #a9a9a9;
+  /*margin-left: -1px; */
+}
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  .sheet > table table tr th,
+  .sheet > table .week-line{
+    width: 14.288%;
+  }
+}
+
+.sheet > table .week-line th{
+  width: 100% !important;
+}
+.sheet > table .week-line th .hrs span,
+.sheet > table .week-line th span{
+  width: 100% !important;
+}
+.sheet > table table tr th:first-child{
+    /* margin-left:0; */
+}
+.sheet > table table tr th:last-child{
+  border-right: inherit;
+  width: 14.28%;
+}
+.sheet > table table tr th .hrs,
+.sheet > table .week-line .hrs{
+  width: 100%;
+  margin-top: 0.5rem;
+}
+.sheet > table .week-line .hrs{
+    border-top: 0.1rem solid #a9a9a9;
+}
+.sheet > table table tr th .hrs span{
+  display: inline-block;
+  width: 33.333%;
+  border-right: 0.1rem solid #a9a9a9;
+  font-size: 0.7rem;
+  padding: 0.35rem 0;
+  border-top:  0.1rem solid  #a9a9a9;
+}
+.sheet > table table tr th .hrs span:last-child{
+  border-right: inherit;
+}
+
+.sheet > table table tr td{
+  border-bottom: 1px solid #d0d0d0;
+  width: 14.28%;
+  height: 2rem;
+  position: relative;
+  border-right: 1px solid #d0d0d0;
+  margin-right: -1px;
+}
+.sheet > table table tr td:last-child::after{
+  display: none;
+}
+.sheet > table table tr td div.time-cell{
+  height: 100%;
+  width: 33.33%;
+  display: inline-block;
+  position: relative;
+  float: left;
+  /* border-right: 1px solid #fcfcfc; */
+  /* margin-left: -1px; */
+}
+.sheet > table table tr td div.time-cell:last-child{
+  border: none;
+}
+.sheet > table .task-shade td{
+  padding: 0;
+}
+.sheet > table .task-shade td:first-child span{
+  padding: 0.6rem 0.5rem;
+}
+.sheet > table .task-shade:last-child td{
+  border-bottom: none !important;
+}
+
+.sheet-head{
+  background-color: #e4e4e4;
+}
+.sheet-head td:first-child{
+  height: 2.7rem;
+  padding: 0;
+}
+.sheet-head td:first-child span{
+  display: block !important;
+  text-align: left;
+  font-size: 0.9rem !important;
+  padding-left:0.5rem !important;
+  height: 0.8rem;
+}
+.sheet-head td:first-child .hrs span{
+  padding: 0 !important;
+  padding-left:0.5rem !important;
+  border-top: none !important;
+  margin-top: 0.1rem !important;
+}
+.sheet-head td{
+  border-bottom: 1px solid black !important;
+  height: 3.22rem !important;
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+   .sheet > table table tr td{
+       margin-right: 0;
+   }
+   .sheet > table table tr th{
+       margin-right: 0;
+   }
+   .task-forming-shade table tr th{
+       margin-right: 0;
+   }
+   .sheet-head td:first-child{
+     height: 3.5rem;
+   }
+}
+
+.task-shade {}
+.task-shade .col-wks{
+  height: 1.2rem;
+  border-bottom: thin solid #d0d0d0;
+}
+.task-shade .col-wks .col{
+   border-right: thin solid #d0d0d0;
+}
+.task-shade .col-wks .col-wk{
+  height: 100%;
+}
+.task-shade .col-wks .col-wk .cell{
+   padding-top: 0.4rem;
+   padding-bottom: 0.4rem;
+   width: 33.333%;
+ }
+ .cell h6{
+  font-family: 'ArialMT';
+  /* font-weight: bold; */
+ }
+  .task-shade .col-wks .col:last-child{
+  border-right: none;
+}
+
+.task-shade td:first-child span{
+  padding: 0.6rem 0.5rem;
+  /* font-weight: bold; */
+}
+.task-shade td table tbody tr td{
+  padding: inherit !important;
+}
+.task-shade td table tbody tr td div{
+  width: 33.33%;
+  height: 100%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  float: left;
+}
+.task-shade td table tbody tr td:last-child div{
+   width: 50%;
+ }
+.task-shade td table tbody tr td:first-child div{
+    width: 100%;
+ }
+.task-shade .time-cell span.task{
+  display: inline-block !important;
+  padding: inherit !important;
+  margin: inherit;
+  position: absolute;
+  left:0;
+  bottom: 0;
+  background: gray;
+  text-align: center;
+  border: thin solid gray;
+  z-index: 10;
+}
+.task-shade td table tbody tr td:first-child{
+  width:4.74%;
+}
+.task-shade td table tbody tr td:last-child{
+  width:9.1%;
+}
+.task-shade td table tbody tr td:first-child div.time-cell{ width: 100%; border: none;}
+.task-shade td table tbody tr td:last-child div.time-cell{ width: 50%;}
+
+.task-shade-head{
+
+}
+.task-shade-head td{
+  height: 3rem;
+  text-align: center;
+  vertical-align: middle;
+  border-top: 1px solid #d0d0d0;
+  border-bottom: 1px solid #d0d0d0;
+}
+.task-shade-head td span{
+  background-color:gray;
+  display: inline-block;
+  width: 100%;
+  padding: 0.26rem 0;
+}
+
+.task-forming-shade .time-cells{
+  width: 100%;
+  height: 100%;
+}
+.task-forming-shade .time-cells .time-cell{
+  width: 33.33%;
+  border-right: thin solid #d0d0d0;
+  width: 33.333%;
+  height: 100%;
+  float: left;
+}
+.task-forming-shade .time-cells .time-cell:last-child{
+  border-right: none;
+}
+.negative {
+  background-color:rgb(250, 58, 58);
+  color: black;
+
+}
+.positive {
+  background-color:rgb(69, 250, 78);
+  color: black;
+
+}
+span.positive{
+  color:rgb(69, 250, 78);
+  font-weight: bold;
+  background-color: inherit;
+}
+span.negative{
+  color:rgb(250, 58, 58);
+  font-weight: bold;
+  background-color: inherit;
+}
+
+@media print{
+  .sheet-head td:first-child span{
+    height: 6px !important;
+  }
+  .sheet-head td:first-child .hrs span{
+    margin-top: 2px !important;
+  }
+}
+@media print and (-ms-high-contrast: active) and (-ms-high-contrast: none) {
+  .sheet-head span,
+  .sheet-head td:first-child span{
+    font-size: 6px !important;
+  }
+  .sheet-head td:first-child span{
+    height: 6px !important;
+  }
+  .sheet-head td:first-child .hrs span{
+    margin-top: 5px !important;
+  }
+  .sheet-head td{
+    height: 33px !important;
+  }
+}
+
+.sheet[_ngcontent-c1] > table[_ngcontent-c1] table[_ngcontent-c1] tr[_ngcontent-c1] th[_ngcontent-c1], .sheet[_ngcontent-c1] > table[_ngcontent-c1] .week-line[_ngcontent-c1] {
+    width: calc(14.28% - 0.1rem);
+}

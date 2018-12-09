@@ -1,0 +1,80 @@
+.negative {
+    background-color:rgb(250, 58, 58);
+    color: black;
+
+}
+.positive {
+    background-color:rgb(69, 250, 78);
+    color: black;
+
+}
+span.positive{
+  color:rgb(69, 250, 78);
+  font-weight: bold;
+  background-color: inherit;
+}
+span.negative{
+  color:rgb(250, 58, 58);
+  font-weight: bold;
+  background-color: inherit;
+}
+.infoIcon{
+    margin-bottom:-1px;
+    width: 10px;
+    height: 10px;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAQAAABKfvVzAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAJcEhZcwABEJAAARCQAYms0rgAAAAHdElNRQfhDBYANyAKJwc5AAABvElEQVQ4y53Uv2sTcRjH8VfuIpiiJKUg9mwVKa1NXZQKikO6FO2i/4EgYh1E6KSjDoUOzoLg4OLSMbhVcWg6tdBFqJJCBUW4RYxCbawE41BN74c4eNu9v5/P53mOe55vQeaZpKCkhLa27nrmvJCSMmhKzSkVfNHUsCxmPWuYhLJrbqkqJgI73nrima9/TIWefMRDV1PifdNz92ztWcKe/KkZQULW7dUPVJ2xohWJhUSUPTKTSm164KVxld/vJwxZshsLJ2HWXCqd+x5bVTLdI6Nia5EAg27meo+EDhhMkKJZEUVMOZ370DkTgkQ+TKhZLKKWyf/ug5aLjmZCimoWA33GUviju66Ydtlqru6YvkBJfwoectt137z2ImfoVwpysKLqiC7Kf/mJAm2tHF3DYWdzvKUd2LGZwZ+sYUQ1Z9i0E6Chk8JNWzhnICPvaBBg2Ubq4J1tnFTwM8XfaBBGbCu6lBiNWN0Pn71XcSyRv+AVYSyiaTzR8bDjykZccN7BHq2bt7uukBjvWqJ8N7mLaLixtxEhsYiWFUNGe40l5R11dxIL1LMsiQ0bSA16x4YF8/t7/b+XQMr2z2vmF7rOeC4lrgrvAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE3LTEyLTIyVDAwOjU1OjMyLTA1OjAwMgaLfwAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxNy0xMi0yMlQwMDo1NTozMi0wNTowMENbM8MAAAAZdEVYdFNvZnR3YXJlAHd3dy5pbmtzY2FwZS5vcmeb7jwaAAAAAElFTkSuQmCC');
+    background-size: 100% auto;
+    position: center;
+    display: inline-block;
+}
+
+/* Tooltip container */
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    width: 618px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    padding: 8px 0;
+    border-radius: 6px;
+
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+
+    /* Fade in tooltip */
+    opacity: 0;
+    transition: opacity 1s;
+}
+
+/* Tooltip arrow */
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}

@@ -1,0 +1,41 @@
+@font-face {
+  font-family: 'edit-icons';
+  src:  url('../fonts/edit-icons/edit-icons.eot?7wz3vs');
+  src:  url('../fonts/edit-icons/edit-icons.eot?7wz3vs#iefix') format('embedded-opentype'),
+    url('../fonts/edit-icons/edit-icons.ttf?7wz3vs') format('truetype'),
+    url('../fonts/edit-icons/edit-icons.woff?7wz3vs') format('woff'),
+    url('../fonts/edit-icons/edit-icons.svg?7wz3vs#edit-icons') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="edit-icon-"], [class*=" edit-icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'edit-icons' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.edit-icon-error:before {
+  content: "\e900";
+}
+.edit-icon-error-list:before {
+  content: "\e901";
+}
+.edit-icon-sort-down:before {
+  content: "\e902";
+}
+.edit-icon-sort-up:before {
+  content: "\e903";
+}
+.edit-icon-split:before {
+  content: "\e904";
+}

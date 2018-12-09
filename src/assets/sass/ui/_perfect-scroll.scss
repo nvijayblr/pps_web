@@ -1,0 +1,15 @@
+
+.ps>.ps__scrollbar-y-rail {
+	z-index: 3;
+}
+
+.ps-content{
+  overflow-x: hidden !important;
+}
+[class^="ps__"], [class*=" ps__"]{
+	z-index: 4 !important;
+}
+
+.perfect-scrollbar > .ps{
+	position: absolute;
+}

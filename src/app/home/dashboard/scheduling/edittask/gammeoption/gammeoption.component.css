@@ -1,0 +1,18 @@
+.faded-box{
+    border: solid thin #d6dadb;
+    padding: 0.7rem;
+    text-align: left;
+    background: #e6ecf0;
+}
+.faded-box	span.bold{
+    font-family: "Arial-BoldMT" !important;
+}
+.highlight{
+    background-color: #b4cff0 !important;
+}
+.edit-task-table.gamme-option{
+    margin-top: 0.5rem;
+}
+.text-break-word{
+    word-break:inherit !important;
+}

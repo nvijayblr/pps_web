@@ -1,0 +1,19 @@
+.temp-move{
+    width: auto;
+    float: right;
+    margin-bottom: 1rem;
+}
+.temp-move button{
+    margin: 0;
+    margin-left: 0.1rem;
+}
+.marginleft {
+    margin-left: 2.5rem;
+    margin-top: 1rem;
+}
+span.required{
+    color: red;
+    margin-top: -1.0rem;
+    font-size: 1.06rem;
+  }
+  

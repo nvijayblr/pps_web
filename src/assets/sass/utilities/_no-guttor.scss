@@ -1,0 +1,35 @@
+.n-r-m{
+  margin-right: inherit !important;
+}
+.n-l-m{
+  margin-left: inherit !important;
+}
+.n-t-m{
+  margin-top: inherit !important;
+}
+.n-b-m{
+  margin-bottom: inherit !important;
+}
+.n-r-p{
+  padding-right: inherit !important;
+}
+.n-l-p{
+  padding-left: inherit !important;
+}
+.n-t-p{
+  padding-top: inherit !important;
+}
+.n-b-p{
+  padding-bottom: inherit !important;
+}
+
+.no-gutters {
+  margin-right: 0;
+  margin-left: 0;
+
+  > .col,
+  > [class*="col-"] {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}

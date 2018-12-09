@@ -1,0 +1,32 @@
+.selected-line{
+    margin: 2rem 0rem 1rem 0rem;
+}
+.selected-line > .form-group{
+    width: auto;
+    float: right;
+}
+span.required{
+    color: red;
+    font-size: 1.06rem;
+  }
+.pr-0{
+    padding-right: 0 !important;
+  }
+  .edit-duration-area{
+      border: 0.05rem solid #d6dadb;
+      border-radius: 0.5rem;
+      padding: 0 12px;
+  }
+  .arrow-button{
+    height: 1.5rem;
+    display: inline;
+    border: none;
+    background-color: #868686;
+    padding: 0.5rem;
+    font-size: 0.6rem;
+    line-height: 0.5rem;
+    color: white;
+    margin: 0.1rem;
+    border-radius: 0.3rem;
+    margin-top: 1rem;
+  }

@@ -1,0 +1,164 @@
+<div class="edit-gamme-blk">
+  <div class="row no-gutters">                                       <!-- && !productionData.maintenancetask-->
+    <div *ngIf="productionData.newStartDateDisableStatus !== true" class="col-6 checkbox-container edit-chk">
+      <div class="col-12 checkbox-container">
+        <input type="checkbox" id="keep-duration" checked [(ngModel)]="modifyTaskDurationObject.keepDurationConstantStatus" (ngModelChange)="keepDurationConstantChange()">
+        <label for="keep-duration">Keep quantity constant</label>
+      </div>
+    </div>
+    <div *ngIf="!isEditMode && formingLine!==null" class="col-6 selected-line">
+      <div class="form-group">
+        <label for="line">Selected Line : {{formingLine}}</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="edit-duration-area edit-duration-bg">
+    <div class="row no-gutters">
+      <div class="col-12">
+        <div class="row">
+
+          <!-- This new duration section is used for normal task and gobling and RnD task-->
+          <div class="col-8 duration-border">  <!--*ngIf="!productionData.maintenancetask"-->
+            <p>{{isEditMode?'New':''}} Duration <button [disabled]="(modifyTaskDurationObject.newStartDate == null && modifyTaskDurationObject.newEndDate === null) || isGammeSelected == true" class="edit-icon-error-list  cursor-pointer" (click)="getScheduledTaskOnSelectedDateRange()"></button></p>
+            <div class="edit-date-blk">
+              <div class="row">
+                <div class="col-6">
+                  <div class="row no-gutters">
+                      <label class="add-task-label">
+                        Start Date/Time<span class="required">*</span>:
+                      </label>
+                  </div>
+                  
+                  <div class="row no-gutters text-wrapper datepicker-left-top">
+                    <span style="display:none"></span>
+                    <!-- <button class="arrow-button"><<</button><button class="arrow-button"><</button> -->
+                    <input [disabled]="productionData.newStartDateDisableStatus==true" id="newDurationStartDate" name="newDurationStartDate" ngui-datetime-picker
+                      [ngClass]="{'error-class':modifyTaskDurationObject.newStartDate === null && productionData.onSaveClick}" [(ngModel)]="modifyTaskDurationObject.newStartDate"
+                      [min-date]="date2MinDate" [default-value]="startDefaultTime" (ngModelChange)="newDurationStartDateChange()" date-format="MM/DD/YYYY hh:mm:A"
+                      parse-format="YYYY-MM-DD HH:mm:A" class="custom-textbox text-align-left" [close-on-select]="false" readonly>
+                      <!-- <button class="arrow-button">></button><button class="arrow-button">>></button> -->
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="row no-gutters">
+                      <label class="add-task-label">
+                       End Date/Time<span class="required">*</span>:
+                      </label>
+                  </div>
+                  
+                  <div class="row no-gutters text-wrapper datepicker-left-top">
+                    <span style="display:none"></span>
+                    <!-- <button class="arrow-button"><</button><button class="arrow-button"><<</button> -->
+                    <input id="newDurationEndDate" name="newDurationEndDate" date-format="MM/DD/YYYY hh:mm:A" parse-format="YYYY-MM-DD HH:mm:A"
+                      [min-date]="date2MinDate" class="custom-textbox text-align-left" ngui-datetime-picker [close-on-select]="false" readonly
+                      [min-date]="date2MinDate" [default-value]="endDefaultTime" [ngClass]="{'error-class':modifyTaskDurationObject.newEndDate === null && productionData.onSaveClick}"
+                      [(ngModel)]="modifyTaskDurationObject.newEndDate" (ngModelChange)="newDurationEndDateChange()" [disabled]="modifyTaskDurationObject.keepDurationConstantStatus === true && productionData.newStartDateDisableStatus!==true">
+                      <!-- <button class="arrow-button">></button><button class="arrow-button">>></button> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- This new duration section is used for maintenance task -->      
+          <!-- <div class="col-8" *ngIf="productionData.maintenancetask && !productionData.goblingOrRnD">
+            <p>{{isEditMode?'New':''}} Duration</p>
+            <div class="edit-date-blk">
+              <div class="row">
+                <div class="col-6 d-flex flex-nowrap">
+                  <label class="label-style add-task-label">
+                    <p class="pr-0">Start Date/Time<span class="required">*</span>:</p>
+                  </label>
+                  <div class="text-wrapper datepicker-top-left">
+                    <span style="display:none"></span> 
+                    <input id="newDurationStartDate" name="newDurationStartDate" ngui-datetime-picker [ngClass]="{'error-class':maintenanceTaskObject.startDate === null && productionData.onSaveClick}"
+                      [(ngModel)]="maintenanceTaskObject.startDate" (ngModelChange)="newDurationStartDateChangeMaintenance()" [min-date]="date2MinDate"
+                      date-format="MM/DD/YYYY hh:mm:A" parse-format="YYYY-MM-DD HH:mm:A" class="custom-textbox" [close-on-select]="false"
+                      readonly>
+                  </div>
+                </div>
+                <div class="col-6 d-flex flex-nowrap">
+                  <label class="label-style add-task-label">
+                    <p class="pr-0">End Date/Time<span class="required">*</span>:</p>
+                  </label>
+                  <div class="text-wrapper datepicker-top-left">
+                    <span style="display:none"></span>
+                    <input id="newDurationEndDate" name="newDurationEndDate" date-format="MM/DD/YYYY hh:mm:A" parse-format="YYYY-MM-DD HH:mm:A"
+                      [min-date]="date2MinDate" class="custom-textbox" ngui-datetime-picker [close-on-select]="false" readonly
+                      [min-date]="date2MinDate" [ngClass]="{'error-class':maintenanceTaskObject.endDate === null && productionData.onSaveClick}"
+                      [(ngModel)]="maintenanceTaskObject.endDate" (ngModelChange)="maintenanceEndDatechange()">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> -->
+          <!-- This new quantity section is used for normal tasks and gobling and RnD task-->
+          <div class="col-4"> <!--*ngIf="!productionData.maintenancetask"-->
+            <p>{{isEditMode?'New':''}} Quantity</p>
+            <div class="edit-date-blk">
+              <div class="row">
+                <div class="col-6">
+                  <div>
+                    Required <br>Quantity:<span class="required">*</span>
+                  </div>
+                  <input [disabled]="modifyTaskDurationObject.keepDurationConstantStatus === true || modifyTaskDurationObject.newStartDate === null || modifyTaskDurationObject.newEndDate === null" type="text" class="custom-textbox edit-minmax text-align-left"
+                    id="newQuantity" name="newQuantity" [ngClass]="{'error-class':modifyTaskDurationObject.newQuantity === '' && productionData.onSaveClick}"
+                    [(ngModel)]="modifyTaskDurationObject.newQuantity" maxlength="9" onPaste="return false" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+                    style="font-size:14px;" (blur)="onBlurNewQuantityChange()">
+                    <!-- (focus)="removeCommas()" -->
+                </div>
+                <div class="col-6">
+                  <div>
+                    Suggested <br>Max:<span class="required">*</span>
+                  </div>
+                  <input [disabled]="true" type="text" class="custom-textbox edit-minmax text-align-left" id="maxQuantity" name="maxQuantity" [(ngModel)]="modifyTaskDurationObject.maxQuantity"
+                    maxlength="9" style="font-size:14px;"
+                    [ngClass]="{'error-class':modifyTaskDurationObject.maxQuantity === '' && productionData.onSaveClick}">
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="edit-duration-area edit-duration-bg duration-info" *ngIf="scheduledTaskDateRangeInfo">
+    <div class="row">
+      <div class="col-12">
+          <i class="edit-icon-error"></i>
+          <div class="information">Task <span class="cursor-pointer" [popper]="TaskListTooltip" [popperTrigger]="'hover'" [popperPlacement]="'top-start'">{{conflictedTaskFirstNumber}}</span><span *ngIf = "conflictedTaskLength > 0">, + {{conflictedTaskLength}}</span> is already scheduled during the selected date range.</div>
+          <popper-content #TaskListTooltip>
+              <div class="task-tooltip-list">
+                <table>
+                  <thead>
+                    <tr>
+                      <th width="14%">Task Number</th>
+                      <th width="20%">Line ID</th>
+                      <th>Start Date/Time</th>
+                      <th>End Date/Time</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let conflictedTask of conflitedTasksRetrivedData;">
+                      <td>{{conflictedTask.TaskNumber}}</td>
+                      <td>{{conflictedTask.MachineDescription}}</td>
+                      <td>{{conflictedTask.BeginDate}}</td>
+                      <td>{{conflictedTask.EndDate}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </popper-content>
+        </div>
+    </div>
+  </div>
+  <div class="edit-duration-area edit-duration-bg duration-info" *ngIf="noScheduledTaskDateRangeInfo">
+    <div class="row">
+      <div class="col-12">
+          <i class="edit-icon-error"></i>
+          <div class="information">The task can be scheduled at the selected dates.</div>
+        </div>
+    </div>
+  </div>
+</div>

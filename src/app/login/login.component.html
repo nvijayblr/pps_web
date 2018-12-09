@@ -1,0 +1,43 @@
+﻿<div class="login-container">
+    <div class="login-bg"></div>
+    <div class="login-wrapper">
+        <div class="innner-container">
+          <h1 class="logo"></h1>
+          <h2>Sign into your account</h2>
+          <form name="formLogin" (ngSubmit)="gotoDashboard()">
+              <div class="form-group">
+                  <div class="username-wrapper">
+                    <input  tabindex="1" type="text" placeholder="Username" name="username" class="login-user" [(ngModel)]="creds.username">
+                  </div>
+                  <div class="password-wrapper">
+                    <input tabindex="2" type="password" placeholder="Password" name="password" class="login-password" [(ngModel)]="creds.password">
+                  </div>
+                  <div class="domain-wrapper">
+                    <div class="ng-select-wrapper">
+                    <ng-select name="DomainID" id="DomainID" [items]="domainObject"
+                               bindLabel="Name"
+                               bindValue="Id"
+                               placeholder="Please Choose a Domain"
+                               [(ngModel)]="creds.domainID"
+                               [clearable] ="false">
+                    </ng-select>
+                  </div>
+                    <!-- <select tabindex="3" class="domain-select" name="DomainID" id="DomainID" [(ngModel)]="creds.domainID">
+                        <option value="" [disabled]="true" [selected]="true">Please Choose a Domain...</option>
+                         <option *ngFor="let domain of domainObject" [ngValue]="domain.Id">{{domain.Name}}</option>
+                    </select>                   -->
+                  </div>
+                  <div class="remember-me">
+                      <label class="control control-checkbox">
+                          <input type="checkbox" name="rememberme" [(ngModel)]="rememberme">
+                          <div class="control-indicator"></div> <span>Remember Me</span>
+                      </label>
+                    </div>
+                  <input type="submit" tabindex="4" class="btn-submit" value="Login" autofocus>
+              </div>
+          </form>
+        </div>
+    </div>
+</div>
+<!--Loader-->
+<app-loader id="appLoader" [hidden]="!loading"></app-loader>

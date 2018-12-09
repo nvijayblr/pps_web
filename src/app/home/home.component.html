@@ -1,0 +1,78 @@
+<header class="app-header">
+
+    <h1 class="app-logo"><a title="Arc Production Scheduling Application"></a>Production Scheduling Application
+      <span *ngIf="environment.EnvironmentName=='QA Environment'">| {{environment.EnvironmentName}}</span>
+      <span *ngIf="environment.EnvironmentName=='Development Environment'">| {{environment.EnvironmentName}}</span> 
+      <span class="ver-badge" style="font-size: 10px;">{{environment.Version}}</span>
+    </h1>
+    <div class="header-right pull-right">
+        <ul class="main-nav">
+            <li (click)="schedulingClick()" [ngClass]="{'active':isSchedule}" *ngIf="(schedulingTabAccess!== null)">
+                <span>Scheduling</span>
+            </li>
+            <li (click)="manningClick()" [ngClass]="{'active':!isSchedule}" *ngIf="(manningTabAccess !== null)">
+                <span>Manning</span>
+            </li>
+        </ul>
+        <div class="user-section">
+            <p>{{username}}</p>
+            <a class="icon-logout" (click)="onLogoutBtnClick()" title="log out"></a>
+        </div>
+    </div>
+</header>
+
+<!-- <header>
+  <div class="space-between">
+      <ul class="inline">
+          <li>
+              <a href="#" class="logo"><img src="assets/images/logo.png" alt=""/></a>
+          </li>
+          <li>
+              <h1>Claim Processing Application</h1>
+          </li>
+      </ul>
+      <ul class="inline">
+          <li>
+              <span>Username</span>
+          </li>
+          <li>
+              <i class="icon icon-logout"></i>
+          </li>
+      </ul>
+  </div>
+</header> -->
+<div *ngIf="logOut" class="popup-wrapper popup-visible ">
+    <div class="popup-overlay"></div>
+    <div class="popup-container logoutPopup">
+        <div class="popup-content">
+            <h4 class="pop-title">Logout!</h4>
+            <div class="pop-body">
+                <p>Are you sure you want to logout?</p>
+            </div>
+            <div class="pop-footer m-t-20">
+                <button class="btn btn-popup-blue " (click)="onLogoutOkClick()">Yes</button>
+                <button class="btn btn-popup-blue " (click)="onLogoutCancelClick()">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="idleTimedOut" class="popup-wrapper popup-visible ">
+    <div class="popup-overlay"></div>
+    <div class="popup-container logoutPopup">
+        <div class="popup-content">
+            <h4 class="pop-title">Session Expired!!!</h4>
+            <div class="pop-body">
+                <p>Your session has expired. Please login again.</p>
+            </div>
+            <div class="pop-footer m-t-20">
+                <button class="btn btn-popup-blue " (click)="onLogoutOkClick()">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+<router-outlet></router-outlet>
+
+<!-- <footer class="site-footer">
+  <div class="site-footer-legal">{{this.homeLocalization.footerLabel}}</div>
+</footer> -->

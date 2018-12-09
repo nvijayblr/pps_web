@@ -1,0 +1,27 @@
+
+/* Custom nav starts here */
+
+.custom-nav {
+	li {
+		a {
+			color: rgba(49, 40, 87, 0.7);
+			border: solid 1px rgba(49, 40, 87, .1);
+			font-size: $font-large;
+			font-family: $font-bold;
+			border-radius: $border-radius $border-radius 0 0;
+			text-align: center;
+			padding: rem(23) rem(40);
+			float: left;
+		}
+		&.current {
+			a {
+				background: #e6ecf0;
+				border-color: #e6ecf0;
+				color: $active-color;
+			}
+		}
+	}
+}
+
+
+/* Custom nav ends here */

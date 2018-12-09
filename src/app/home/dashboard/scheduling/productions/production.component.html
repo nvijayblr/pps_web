@@ -1,0 +1,1395 @@
+
+<section class="main-container clearfix">
+	<!-- Top Navigation Starts Here -->
+	<div class="top-section">
+		<ul class="page-nav" *ngIf="!simulateFlag">
+			<li *ngFor="let button of productionLiButtons; let i = index" (click)="onLiBtnclick(button.name,i)" [class.current]="isLiItemClicked==button.name">
+				<a title="{{button.name}}">{{button.name}}</a>
+			</li>
+		</ul>
+		<div class="date-selector invisibleDatePicker pull-right ml-1">
+			<!-- <span class="plain-text">Date</span>
+			<input id="weekStartday" name="weekStartday" ngui-datetime-picker date-only="true"
+			[(ngModel)]="weekStartday"
+			date-format="MM/DD/YYYY" parse-format="YYYY-MM-DD" class="custom-textbox" [close-on-select]="false" readonly>  -->
+				<i class="icon-previous" (click)="onPreviousWeekdate()"></i>
+			<span class="date-range">{{weekStartday}} – {{weekEndday}}<input  class="date-range datepickerInlineTextBox" (ngModelChange)="weekPicker(weekstarts.value)"  date-only="true" id="weekstart" name="weekstart" #weekstarts ngui-datetime-picker [(ngModel)]="weekstart" [min-date]="date2MinDate"   date-format="MM/DD/YYYY" parse-format="YYYY-MM-DD" [close-on-select]="true" [default-value]="defaultDay" date-only="true" readonly>
+			</span>
+			<i class="icon-next" (click)="onFutureWeekdate()"></i>
+		</div>
+		<button *ngIf="simulateFlag" class="btn btn-blue pull-right m-b-25" id="btn-add-task" (click)="addNewTask()">Add New Task</button>
+		<div class="dropdown-container">
+				<!-- [popper]="editTaskPopper"
+				[popperShowOnStart]="false"
+				[popperTrigger]="'click'"
+				[popperPlacement]="'bottom-end'"  (click)="getEditTaskPopper()" -->
+			<button *ngIf="simulateFlag" class="btn btn-blue pull-right m-b-25" (click)="getEditTaskPopper()">Edit Task</button>
+			<!-- add class 'show' for popup-visible -->
+			<div class="dropdown-edit-task" [ngClass]="{'show':showEditTaskPopUp}">
+					<div class="form-group m-b-25">
+						<label class="bold">Enter Task Number</label>
+						<input type="text" id = "taskNumber" class="form-control" [(ngModel)]="taskNumber"
+							maxlength="8" (keydown)="onEnter($event)"
+							onkeypress='return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode >= 65 &&event.charCode <= 90)||(event.charCode >= 97 && event.charCode <= 122)'>
+					</div>
+					<div class="pull-right">
+						<button class="btn btn-blue btn-sm" (click)="cancelEditTaskPopup()">Cancel</button>
+						<button class="btn btn-blue btn-sm" id = "editTaskPopUpOk" (click)="getTaskID()">OK</button>
+					</div>
+			</div>
+		</div>
+
+     <!-- <popper-content #editTaskPopper id="editTaskPopup">
+			 <div class="form-group m-b-25">
+				 <label class="bold">Enter Task Number</label>
+				 <input type="text" id = "taskNumber" class="form-control" [(ngModel)]="taskNumber"
+			      maxlength="8" (keydown)="onEnter($event)"
+				   onkeypress='return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode >= 65 &&event.charCode <= 90)||(event.charCode >= 97 && event.charCode <= 122)'>
+			 </div>
+			 <div class="pull-right">
+				 <button class="btn btn-blue btn-sm" (click)="cancelEditTaskPopup()">Cancel</button>
+				 <button class="btn btn-blue btn-sm" id = "editTaskPopUpOk" (click)="getTaskID()">OK</button>
+			 </div>
+     </popper-content> -->
+
+
+		<h2 *ngIf="!simulateFlag" class="page-title">{{pageHeader}}</h2>
+		<div class="back-nav" *ngIf="simulateFlag">
+			<h6>
+				<a class="icon-back" (click)="backFromSimulate()"></a>{{simulatedPage}}</h6>
+			<!-- <a class="icon-back" (click)="backFromSimulate()"></a>Primary Production Tasks</h6> -->
+		</div>
+	</div>
+	<div class="status-labels">
+		<h4 *ngFor="let legend of legendData; let i = index">
+			<span [style.background-color]="legend.TaskStatusColor"></span>{{legend.TaskStatusName}}
+		</h4>
+	</div>
+	<!-- Top Navigation Ends Here -->
+	<!-- Table Holder Starts Here -->
+	<div class="table-holder m-b-40">
+		<table class="custom-table">
+			<!-- table Header Starts Here -->
+			<thead>
+				<tr>
+					<th class="col-title">{{selecedLine}}</th>
+					<th class="col-wks">
+						<div class="col-wk col" [class.current]="day.IsCurrentDay === true" *ngFor="let day of weekDays; let i = index">{{day.DisplayName}}</div>
+					</th>
+				</tr>
+			</thead>
+			<!-- table Header Ends Here -->
+			<!-- Time slot Starts Here -->
+			<tbody>
+				<tr class="col-sub">
+					<td class="col-title"></td>
+					<td class="col-wks">
+						<div class="col-wk col {{time.status}}" *ngFor="let time of timeSlot; let i = index">
+							<div class="cell split-3">{{time.first12}}</div>
+							<div class="cell split-3">{{time.middle8}}</div>
+							<div class="cell split-3">{{time.last4}}</div>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+			<!-- Time slot ends Here -->
+		</table>
+		<!-- table Body Starts Here -->
+		<div class="scrollable-body">
+			<perfect-scrollbar>
+				<table class="custom-table scroll-table" [ngClass]="{'decor-table':viewFlag ==='decor'}">
+					<tbody>
+						<tr class="data-cols" *ngFor="let FormingLine of formLines; let i = index">
+							<td class="col-title">{{FormingLine.LineName}}</td>
+							<td class="col-wks">
+								<!-- table column starts Here -->
+								<div class="col-wk col" *ngFor="let DaysVal of FormingLine.Days; let j = index" [class.current]="DaysVal.IsCurrentDay === true">
+									<div class="cell split-3" (click)="emptySlotClick(DaysVal, 12, FormingLine)"></div>
+									<div class="cell split-3" (click)="emptySlotClick(DaysVal, 8, FormingLine)"></div>
+									<div class="cell split-3" (click)="emptySlotClick(DaysVal, 4, FormingLine)"></div>
+									<div (click)="onEachScheduleTap(FormingLine, Tasks, FormingLine.LineName, FormingLine.Id, FormingLine.SIMU,DaysVal)" *ngFor="let Tasks of DaysVal.Tasks; let k = index">
+										<div class="sec-task {{Tasks.className}}" *ngIf="Tasks.IsOngoing === false &&Tasks.style" [ngStyle]="Tasks.style" #popper1
+										 [popper]="popper1Content" [popperTrigger]="'hover'" [popperDisableStyle]="false" [popperPlacement]="'auto'">
+											<div *ngIf="FormingLine.IsFurnaceTagged" class="task-brief" [ngStyle]="Tasks.stylebreif">
+												<h6>{{Tasks.PullTonsPerDay}}
+													<span>Tons/day</span>
+												</h6>
+											</div>
+											<h5>{{Tasks.Description}}</h5>
+											<p *ngIf="Tasks.ProductionOrder !== ''">P.O. {{Tasks.ProductionOrder}}
+												<!-- <br/> {{Tasks.ProductDiamension}} -->
+											</p>
+											<p>{{Tasks.ProductDiamension}}</p>
+										</div>
+										<div class="sec-task {{Tasks.className}}" *ngIf="Tasks.TaskType === 'Maintenance' && Tasks.style" [ngStyle]="Tasks.style" #popper1
+										[popper]="popper1Content" [popperTrigger]="'hover'" [popperDisableStyle]="false" [popperPlacement]="'auto'">
+											<h4 style="text-align:center">
+												<br/>{{Tasks.Description}}</h4>
+										</div>
+										<!-- <div class="sec-task {{Tasks.className}}" *ngIf="Tasks.TaskType === 'MAINTENANCE PRESS' && Tasks.style" [ngStyle]="Tasks.style">
+						                                                    <h4>{{Tasks.Description}}</h4>
+						                                                </div> -->
+										<div class="sec-task {{Tasks.className}}" *ngIf="!Tasks.TaskType ==='GlobblingRnD' && Tasks.style" [ngStyle]="Tasks.style" #popper1
+										[popper]="popper1Content" [popperTrigger]="'hover'" [popperDisableStyle]="false" [popperPlacement]="'auto'">
+											<h4 style="text-align:center">
+												<br/>{{Tasks.Description}}</h4>
+										</div>
+										<div class="sec-task {{Tasks.className}}" *ngIf="Tasks.IsOngoing === true && Tasks.TaskType !== 'Maintenance'&&Tasks.TaskType !=='GlobblingRnD' && Tasks.style"
+										 [ngStyle]="Tasks.style" #popper1 [popper]="popper1Content" [popperTrigger]="'hover'" [popperDisableStyle]="false" [popperPlacement]="'bottom'">
+											<div *ngIf="FormingLine.IsFurnaceTagged" class="task-brief" [ngStyle]="Tasks.stylebreif">
+												<h6>{{Tasks.PullTonsPerDay}}
+													<span>Tons/day</span>
+												</h6>
+											</div>
+											<h5>{{Tasks.Description}}</h5>
+											<p *ngIf="Tasks.TaskType !== 'GlobblingRnD'"> P.O. {{Tasks.ProductionOrder}}
+												<br/> {{Tasks.ProductDiamension}}
+											</p>
+										</div>
+										<popper-content #popper1Content>
+											<h6>{{Tasks.Description}}</h6>
+											<p>{{Tasks.ItemNumber}}</p>
+											<p *ngIf="Tasks.ProductionOrder !== ''">P.O. {{Tasks.ProductionOrder}} {{Tasks.ProductDiamension}}</p>
+											<p *ngIf="FormingLine.IsFurnaceTagged">{{Tasks.ItemsPerMinute}}
+												<span>items/min</span> {{Tasks.PullTonsPerDay}}
+												<span>t/day</span> {{Tasks.NTables}}x{{Tasks.NMolds}}
+												<span>{{Tasks.SpeedFactor}}</span><br/>
+												{{Tasks.BeginDate| date : 'MM/dd/yyyy'}} {{Tasks.BeginDate| date : 'shortTime'}}  {{Tasks.EndDate| date : 'MM/dd/yyyy'}} {{Tasks.EndDate| date : 'shortTime'}}
+											</p>
+											<p *ngIf="!FormingLine.IsFurnaceTagged">{{Tasks.ItemsPerMinute}}
+												<span>items/min</span> {{Tasks.NTables}}x{{Tasks.NMolds}}
+												<span>{{Tasks.SpeedFactor}}</span><br/>
+												{{Tasks.BeginDate| date : 'MM/dd/yyyy'}} {{Tasks.BeginDate| date : 'shortTime'}}  {{Tasks.EndDate| date : 'MM/dd/yyyy'}} {{Tasks.EndDate| date : 'shortTime'}}
+											</p>
+										</popper-content>
+									</div>
+								</div>
+								<!-- table column ends Here -->
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</perfect-scrollbar>
+		</div>
+		<!-- table Body Ends Here -->
+		<!-- table Footer Starts Here -->
+		<table class="custom-table cust-footer" *ngIf="isLiItemClicked === 'Primary Production'">
+			<tfoot>
+				<tr>
+					<td class="col-title">
+						<h5 class="table-tons">Tons</h5>
+						<div class="column-summary pull-right">
+							<p class="total">Total</p>
+							<div *ngFor="let Furnaces of progressFurnaces; let i = index">
+								<p>{{Furnaces.FurnaceName}}</p>
+							</div>
+						</div>
+					</td>
+					<td class="col-wks">
+						<div class="col-wk col" *ngFor="let tonState of tonStates; let i = index">
+							<h4 class="footer-det" *ngIf="i===0">{{tonState.TotalTons}}T</h4>
+							<h4 class="footer-det" *ngIf="i!==0">{{tonState.TotalTons}} Tons</h4>
+
+							<div *ngFor="let Furnace of tonState.Furnaces; let j = index">
+								<!-- First (1st) column -->
+								<div *ngIf="i===0 && Furnace.CurrentUtilization <= Furnace.DefaultCapacity" class="progress-indicator">
+									<span class="progress-value">{{Furnace.CurrentUtilization}}/{{Furnace.DefaultCapacity}}</span>
+								</div>
+								<div *ngIf="i===0 && Furnace.CurrentUtilization > Furnace.DefaultCapacity" class="progress-indicator">
+										<span class="progress-value red-alert-s">{{Furnace.CurrentUtilization}}/{{Furnace.DefaultCapacity}}</span>
+								</div>
+								<!-- Second to second last (2-7th) columns -->
+								<div *ngIf="i!==0 && i!==7 && j===0 && Furnace.CurrentUtilization <= Furnace.DefaultCapacity" class="progress-indicator">
+									<div class="progress progress-yellow">
+										<span [style.width.%]="(Furnace.CurrentUtilization / Furnace.DefaultCapacity) * 100"></span>
+									</div>
+									<span class="progress-value">{{Furnace.CurrentUtilization}}/{{Furnace.DefaultCapacity}}</span>
+								</div>
+								<div *ngIf="i!==0 && i!==7 && j===0 && Furnace.CurrentUtilization > Furnace.DefaultCapacity" class="progress-indicator">
+									<div class="progress progress-yellow">
+										<span [style.width.%]="100"></span>
+									</div>
+									<span class="progress-value red-alert-s">{{Furnace.CurrentUtilization}}/{{Furnace.DefaultCapacity}}</span>
+								</div>
+								<div *ngIf="i!==0 && i!==7 && j===1 && Furnace.CurrentUtilization <= Furnace.DefaultCapacity" class="progress-indicator">
+									<div class="progress progress-green">
+										<span [style.width.%]="(Furnace.CurrentUtilization / Furnace.DefaultCapacity) * 100"></span>
+									</div>
+									<span class="progress-value">{{Furnace.CurrentUtilization}}/{{Furnace.DefaultCapacity}}</span>
+								</div>
+								<div *ngIf="i!==0 && i!==7 && j===1 && Furnace.CurrentUtilization > Furnace.DefaultCapacity" class="progress-indicator">
+									<div class="progress progress-green">
+										<span [style.width.%]="100"></span>
+									</div>
+									<span class="progress-value red-alert-s">{{Furnace.CurrentUtilization}}/{{Furnace.DefaultCapacity}}</span>
+								</div>
+								<div *ngIf="i!==0 && i!==7 && j===2 && Furnace.CurrentUtilization <= Furnace.DefaultCapacity" class="progress-indicator">
+									<div class="progress progress-red">
+										<span [style.width.%]="(Furnace.CurrentUtilization / Furnace.DefaultCapacity) * 100"></span>
+									</div>
+									<span class="progress-value">{{Furnace.CurrentUtilization}}/{{Furnace.DefaultCapacity}}</span>
+								</div>
+								<div *ngIf="i!==0 && i!==7 && j===2 && Furnace.CurrentUtilization > Furnace.DefaultCapacity" class="progress-indicator">
+									<div class="progress progress-red">
+										<span [style.width.%]="100"></span>
+									</div>
+									<span class="progress-value red-alert-s">{{Furnace.CurrentUtilization}}/{{Furnace.DefaultCapacity}}</span>
+								</div>
+								<!-- Last (8th) column -->
+								<div *ngIf="i===7 && Furnace.CurrentUtilization <= Furnace.DefaultCapacity" class="progress-indicator">
+									<span class="progress-value">{{Furnace.CurrentUtilization}}/{{Furnace.DefaultCapacity}}</span>
+								</div>
+								<div *ngIf="i===7 && Furnace.CurrentUtilization > Furnace.DefaultCapacity" class="progress-indicator">
+										<span class="progress-value red-alert-s">{{Furnace.CurrentUtilization}}/{{Furnace.DefaultCapacity}}</span>
+									</div>
+							</div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="col-title">
+						<h5>Job Changes</h5>
+					</td>
+					<td class="col-wks">
+						<div class="col-wk col pos-relative" *ngFor="let JobChanges of jobChanges; let i = index">
+							<div class="task-summary task-blue" *ngIf="JobChanges.pressTask!==null && JobChanges.pressTask.PressTaskCount<=3">
+								<h3 *ngIf="JobChanges.pressTask.PressTaskCount>0" title="{{ i===0 ? 'Press Tasks' : ''}}" style="cursor: pointer;" (click)="jobChangesPopUpshow(JobChanges.Day,JobChanges.pressTask)">{{JobChanges.pressTask.PressTaskCount}}</h3>
+								<h3 *ngIf="JobChanges.pressTask.PressTaskCount<=0" title="{{ i===0 ? 'Press Tasks' : ''}}" style="cursor: default;">{{JobChanges.pressTask.PressTaskCount}}</h3>
+								<span *ngIf="i!==0">Press Tasks</span>
+							</div>
+							<div class="task-summary task-blue" *ngIf="JobChanges.pressTask!==null && JobChanges.pressTask.PressTaskCount>3 && JobChanges.pressTask.ApprovalStatus">
+								<h3 *ngIf="JobChanges.pressTask.PressTaskCount>0" title="{{ i===0 ? 'Press Tasks' : ''}}" style="cursor: pointer;" (click)="jobChangesPopUpshow(JobChanges.Day,JobChanges.pressTask)">{{JobChanges.pressTask.PressTaskCount}}</h3>
+								<h3 *ngIf="JobChanges.pressTask.PressTaskCount<=0" title="{{ i===0 ? 'Press Tasks' : ''}}" style="cursor: default;">{{JobChanges.pressTask.PressTaskCount}}</h3>
+								<span *ngIf="i!==0">Press Tasks</span>
+							</div>
+							<!-- For showing data with red color -->
+							<div class="task-summary task-red" *ngIf="JobChanges.pressTask!==null && JobChanges.pressTask.PressTaskCount>3 && !JobChanges.pressTask.ApprovalStatus">
+							<!-- <div class="task-summary task-red" *ngIf="JobChanges.pressTask!==null && JobChanges.pressTask.PressTaskCount>3"> -->
+								<h3 *ngIf="JobChanges.pressTask.PressTaskCount>0" title="{{ i===0 ? 'Press Tasks' : ''}}" style="cursor: pointer;" (click)="jobChangesPopUpshow(JobChanges.Day,JobChanges.pressTask)">{{JobChanges.pressTask.PressTaskCount}}</h3>
+								<h3 *ngIf="JobChanges.pressTask.PressTaskCount<=0" title="{{ i===0 ? 'Press Tasks' : ''}}" style="cursor: default;">{{JobChanges.pressTask.PressTaskCount}}</h3>
+								<span *ngIf="i!==0">Press Tasks</span>
+							</div>
+							<!-- end -->
+
+							<div class="task-summary task-blue" *ngIf="JobChanges.blowTask!==null && JobChanges.blowTask.BlowTaskCount<=3">
+								<h3 *ngIf="JobChanges.blowTask.BlowTaskCount>0" title="{{ i===0 ? 'Blown Tasks' : ''}}" style="cursor: pointer;" (click)="jobChangesPopUpshow(JobChanges.Day,JobChanges.blowTask)">{{JobChanges.blowTask.BlowTaskCount}} </h3>
+								<h3 *ngIf="JobChanges.blowTask.BlowTaskCount<=0" title="{{ i===0 ? 'Blown Tasks' : ''}}" style="cursor: default;">{{JobChanges.blowTask.BlowTaskCount}} </h3>
+								<span *ngIf="i!==0">Blown Tasks</span>
+							</div>
+							<div class="task-summary task-blue" *ngIf="JobChanges.blowTask!==null && JobChanges.blowTask.BlowTaskCount>3 && JobChanges.blowTask.ApprovalStatus">
+								<h3 *ngIf="JobChanges.blowTask.BlowTaskCount>0" title="{{ i===0 ? 'Blown Tasks' : ''}}" style="cursor: pointer;" (click)="jobChangesPopUpshow(JobChanges.Day,JobChanges.blowTask)">{{JobChanges.blowTask.BlowTaskCount}} </h3>
+								<h3 *ngIf="JobChanges.blowTask.BlowTaskCount<=0" title="{{ i===0 ? 'Blown Tasks' : ''}}" style="cursor: default;">{{JobChanges.blowTask.BlowTaskCount}} </h3>
+								<span *ngIf="i!==0">Blown Tasks</span>
+							</div>
+							<!-- For showing data with red color -->
+							<div class="task-summary task-red" *ngIf="JobChanges.blowTask!==null && JobChanges.blowTask.BlowTaskCount>3 && !JobChanges.blowTask.ApprovalStatus">
+							<!-- <div class="task-summary task-red" *ngIf="JobChanges.blowTask!==null && JobChanges.blowTask.BlowTaskCount>3"> -->
+								<h3 *ngIf="JobChanges.blowTask.BlowTaskCount>0" title="{{ i===0 ? 'Blown Tasks' : ''}}" style="cursor: pointer;" (click)="jobChangesPopUpshow(JobChanges.Day,JobChanges.blowTask)">{{JobChanges.blowTask.BlowTaskCount}} </h3>
+								<h3 *ngIf="JobChanges.blowTask.BlowTaskCount<=0" title="{{ i===0 ? 'Blown Tasks' : ''}}" style="cursor: default;">{{JobChanges.blowTask.BlowTaskCount}} </h3>
+								<span *ngIf="i!==0">Blown Tasks</span>
+							</div>
+							<!-- end -->
+						</div>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+		<!-- table Footer Ends Here -->
+	</div>
+	<!-- Table Holder Ends Here -->
+	<!-- Bottom Section Starts Here -->
+
+	<div class="button-controls pull-right" *ngIf="!simulateFlag">
+		<button class="btn btn-border-blue" (click)="onConfigureFurnaceCapacity()" *ngIf="isPrimaryProduction && (access === true)">Configure Furnace Capacity</button>
+		<button class="btn btn-blue" (click)="onSimulateChange()" *ngIf="(access === true)">Simulate Changes</button>
+		<button class="btn btn-blue" (click)="onChangeSummary(0)">Change Summary</button>
+		<button class="btn btn-border-blue" (click)="onRefrersh()">Refresh Task</button>
+		<button class="btn btn-border-blue" (click)="onExport()">Print</button>
+	</div>
+	<div class="button-controls pull-right" *ngIf="simulateFlag">
+		<button class="btn btn-blue" (click)="onChangeSummary(1)">Change Summary</button>
+		<!-- <button class="btn btn-border-red">Manning Alerts</button>
+		<button class="btn btn-border-red">Constraint Alerts</button>
+		<button class="btn btn-blue" (click)="onFreezeSchedule()">{{freezeScheduleLbl}}</button> -->
+		<!-- <button class="btn btn-blue">Save</button> -->
+	</div>
+	<!-- Bottom Section Ends Here -->
+	<!-- Unscheduled Section Starts Here -->
+	<div class="unscheduled-task-list" *ngIf="simulateFlag">
+		<h6 class="sub-title">Unscheduled Tasks</h6>
+		<div class="d-flex space-between" style="flex-flow:row wrap">
+			<div class="card" (click)="OnRescheduleTask(unscheduledTasks)" *ngFor="let unscheduledTasks of unscheduledTasksItems; let i = index">
+				<h5>Task Number: {{unscheduledTasks.TaskNumber}}</h5>
+				<p>VCA PO Number: {{unscheduledTasks.VcaPoNumber}}</p>
+				<p>LineID: {{unscheduledTasks.MachineDescription}}</p>
+				<p>Item Number:{{unscheduledTasks.ItemNumber}} Qty:{{unscheduledTasks.QuantItems}}</p>
+				<p>
+					<span>Begin Date: {{unscheduledTasks.BeginDate| date:'MM/dd/yyyy'}}</span>
+				</p>
+			</div>
+		</div>
+		<div *ngIf="unscheduledTasksItems.length === 0 || unscheduledTasksItems.length === undefined">
+			<h2 style="text-align: center;margin-top: 20px;">There is no unscheduled tasks </h2>
+		</div>
+	</div>
+	<!-- Unscheduled Section Ends Here -->
+</section>
+<!-- Export Popup Starts Here -->
+<div class="popup-wrapper export-popup">
+	<div class="popup-overlay"></div>
+	<div class="popup-container">
+		<div class="popup-content">
+			<h4 class="pop-title">Export</h4>
+			<div class="pop-body">
+				<div class="row">
+					<div class="col-4 checkbox-container">
+						<input type="checkbox" id="export-check1" checked>
+						<label for="export-check1">Forming Lines</label>
+					</div>
+					<div class="col-8 checkbox-container">
+						<input type="checkbox" id="export-check2" checked>
+						<label for="export-check2">Secondary Lines</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-6 d-flex flex-nowrap">
+						<label class="label-style">Start Date:</label>
+						<div class="text-wrapper">
+							<my-date-picker [options]="myDatePickerOptions"></my-date-picker>
+						</div>
+					</div>
+					<div class="col-6 d-flex flex-nowrap">
+						<label class="label-style">End Date:</label>
+						<div class="text-wrapper">
+							<my-date-picker [options]="myDatePickerOptions"></my-date-picker>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="pop-footer m-t-20">
+				<button class="btn btn-popup-blue">Send as Email</button>
+				<button class="btn btn-popup-blue">Export</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Export Popup Ends Here -->
+<!-- Change Summary Popup Starts Here -->
+<div class="popup-wrapper change-summary-popup popup-visible" *ngIf="isChangeSummary">
+	<div class="popup-overlay"></div>
+	<div class="popup-container">
+		<div class="vertical-main">
+			<div class="vertical-content">
+				<div class="popup-content">
+					<h4 class="pop-title">Pending Changes
+						<a class="icon-close pull-right" (click)="closeChangeSummary()"></a>
+					</h4>
+					<div class="pop-body">
+						<div *ngIf="changeConsolidated.length === 0" class="error-disp"> <i class="icon-warning"></i>No Pending Changes since the last Simulation.</div>
+						<div class="pop-table-holder" *ngIf="changeConsolidated.length > 0">
+							<table>
+								<thead>
+									<tr>
+										<th width="15%">Sl. No</th>
+										<th width="60%">Change Description</th>
+										<th width="25%"></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr class="data-insider modified">
+										<td colspan="3">
+											<perfect-scrollbar style="height:250px; max-height: 250px;">
+												<table *ngFor="let consolidated of changeConsolidated; let i = index">
+													<tr>
+														<td width="15%">
+															<strong>{{i+1}}</strong>
+														</td>
+														<td width="60%">
+															<p class="first-line">
+																<span>Task No: <strong>{{consolidated.TaskNumber}}</strong> </span>
+																<span>Item No: <strong>{{consolidated.ItemNumber}}</strong></span>
+															</p>
+															<p>Item Description: <strong>{{consolidated.ItemDescription}}</strong></p>
+															<p>Simulated on: <strong>{{consolidated.SimulatedOn|date:'MM/dd/yyyy'}}</strong></p>
+														</td>
+														<td width="25%">
+															<a class="btn-link pull-right" (click)="viewChangeSummaryDetails(consolidated.TaskID)">View Details</a>
+															<a class="btn-link pull-right m-t-5" (click)="viewEditTask(consolidated.TaskID)">Edit Task</a>
+														</td>
+													</tr>
+												</table>
+											</perfect-scrollbar>
+										</td>
+									</tr>
+
+									<!-- <tr *ngIf="changeConsolidated.length == 0">
+										<td colspan="3" class="no-records-td">
+											<strong>No Records Found</strong>
+										</td>
+									</tr> -->
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Change Summary Popup Ends Here -->
+<!-- Change Summary Detailed Popup Starts Here -->
+<div class="popup-wrapper pending-changes-details popup-visible" *ngIf="detailedChangeSummary">
+	<div class="popup-overlay"></div>
+	<div class="popup-container">
+		<div class="vertical-main">
+			<div class="vertical-content">
+				<div class="popup-content">
+					<h4 class="pop-title">
+						Production Task
+						<a class="icon-close pull-right" (click)="closeChangeDetails()"></a>
+						<span>On : {{changeSummaryDetails.ChangedOn|date:'MM/dd/yyyy'}}</span>
+						<span>Changed by : {{changeSummaryDetails.ChangedBy}}</span>
+					</h4>
+					<div class="pop-body">
+						<div class="pop-table-holder">
+							<table>
+								<thead>
+									<tr>
+										<th>Fields</th>
+										<th>Line ID</th>
+										<th>Qty(min)</th>
+										<th>Qty(max)</th>
+										<th>Start Date/Time</th>
+										<th>End Date/Time</th>
+										<th>nChannel</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr *ngIf="prodTaskDetails.oldValues[0].LineID === null">
+										<td>Old Value</td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+									</tr>
+									<tr *ngIf="prodTaskDetails.oldValues[0].LineID !== null">
+										<td>Old Value</td>
+										<td>{{prodTaskDetails.oldValues[0].LineID}}</td>
+										<td>{{prodTaskDetails.oldValues[0].QuantItems}}</td>
+										<td>{{prodTaskDetails.oldValues[0].QuantItemsMax}}</td>
+										<td>{{prodTaskDetails.oldValues[0].BeginDate}}</td>
+										<td>{{prodTaskDetails.oldValues[0].EndDate}}</td>
+										<td>{{prodTaskDetails.oldValues[0].NChanel}}</td>
+									</tr>
+									<tr>
+										<td>New Value</td>
+										<td>{{prodTaskDetails.newValues[0].LineID}}</td>
+										<td>{{prodTaskDetails.newValues[0].QuantItems}}</td>
+										<td>{{prodTaskDetails.newValues[0].QuantItemsMax}}</td>
+										<td>{{prodTaskDetails.newValues[0].BeginDate}}</td>
+										<td>{{prodTaskDetails.newValues[0].EndDate}}</td>
+										<td>{{prodTaskDetails.newValues[0].NChanel}}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<h4 class="pop-title pop-second-title">
+						Pack Task
+					</h4>
+					<div class="pop-body">
+						<div *ngIf="noPackTask" class="error-disp"> <i class="icon-warning"></i> No pack task is associated with this task</div>
+						<div *ngIf="!noPackTask" class="pop-table-holder second-table">
+							<table>
+								<thead>
+									<tr>
+										<th width="10%">Sequence</th>
+										<th width="10%">Fields</th>
+										<th width="10%">Item No.</th>
+										<th width="20.5%">Description</th>
+										<th width="16%">Start Date/Time</th>
+										<th width="16%">End Date/Time</th>
+										<th width="9%">Qty(min)</th>
+										<th width="11%">Qty(max)</th>
+									</tr>
+								</thead>
+								<tbody>
+										<tr class="data-insider">
+											<td colspan="8">
+												<perfect-scrollbar style="max-height:210px; min-height:60px;">
+													<table *ngFor="let oldDetails of packTaskDetails.newValues; let i = index">
+														<tr *ngIf="packTaskDetails.oldValues.length === 0 || i >= packTaskDetails.oldValues.length">
+															<td class="p-one" rowspan="2" width="10%">
+																P{{i+1}}
+															</td>
+															<td width="10%">Old Value</td>
+															<td width="10%"></td>
+															<td width="20.5%"></td>
+															<td width="16%"></td>
+															<td width="16%"></td>
+															<td width="9%"></td>
+															<td width="11%"></td>
+														</tr>
+														<tr *ngIf="packTaskDetails.oldValues.length > 0 && i < packTaskDetails.oldValues.length">
+															<td class="p-one" rowspan="2" width="10%">
+																P{{i+1}}
+															</td>
+															<td width="10%">Old Value</td>
+															<td width="10%">{{packTaskDetails.oldValues[i].ItemNumber}}</td>
+															<td width="20.5%">{{packTaskDetails.oldValues[i].Description}}</td>
+															<td width="16%">{{packTaskDetails.oldValues[i].BeginDate}}</td>
+															<td width="16%">{{packTaskDetails.oldValues[i].EndDate}}</td>
+															<td width="9%">{{packTaskDetails.oldValues[i].QuantItems}}</td>
+															<td width="11%">{{packTaskDetails.oldValues[i].QuantItemsMax}}</td>
+														</tr>
+														<tr>
+															<td>New Value</td>
+															<td>{{packTaskDetails.newValues[i].ItemNumber}}</td>
+															<td>{{packTaskDetails.newValues[i].Description}}</td>
+															<td>{{packTaskDetails.newValues[i].BeginDate}}</td>
+															<td>{{packTaskDetails.newValues[i].EndDate}}</td>
+															<td>{{packTaskDetails.newValues[i].QuantItems}}</td>
+															<td>{{packTaskDetails.newValues[i].QuantItemsMax}}</td>
+														</tr>
+													</table>
+												</perfect-scrollbar>
+											</td>
+										</tr>
+									</tbody>
+
+
+
+								<!-- <tbody *ngIf="packTaskDetails.New.length == 0">
+									<tr>
+										<td colspan="8" class="no-records-td">
+											<strong>No Records Found</strong>
+										</td>
+									</tr>
+								</tbody> -->
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Change Summary Detailed Popup Ends Here -->
+<!-- Add Task Popup Starts Here -->
+<div class="popup-wrapper add-task-popup popup-visible" *ngIf="createTaskWithoutGamme">
+	<div class="popup-overlay"></div>
+	<div class="popup-container">
+		<div class="vertical-main">
+			<div class="vertical-content">
+				<div class="popup-content">
+					<h4 class="pop-title">Add New Task</h4>
+					<div class="pop-body">
+						<div class="row">
+							<div class="col-12">
+								<label class="label-style">{{selecedLine}}</label>
+							</div>
+							<div class="col-12 select-wrapper cust-select">
+								<select id="selectLineChangeValue" name="selectLineChangeValue" [(ngModel)]="addNewTaskObject.selectLine" [ngClass]="{'error-class':(addNewTaskObject.selectLine === '0'||addNewTaskObject.selectLine === '') && onCreateOk}">
+									<!-- <option value="0" selected>Select Line</option> -->
+									<option *ngFor="let formingLine of formingLineList; let i = index" value="{{formingLine.LineId}}">{{formingLine.Description}}</option>
+								</select>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-6 d-flex flex-nowrap">
+								<label class="label-style add-task-label">Start Date/Time:</label>
+								<div class="text-wrapper">
+									<input id="addNewTaskStartDate" name="addNewTaskStartDate" ngui-datetime-picker [(ngModel)]="addNewTaskObject.startDate"
+									 [ngClass]="{'error-class':addNewTaskObject.startDate === '' && onCreateOk}" [min-date]="date2MinDate" date-format="MM/DD/YYYY hh:mm:A"
+									 parse-format="YYYY-MM-DD HH:mm:A" class="custom-textbox" [close-on-select]="false" readonly>
+								</div>
+							</div>
+							<div class="col-6 d-flex flex-nowrap">
+								<label class="label-style add-task-label">End Date/Time:</label>
+								<div class="text-wrapper">
+									<input id="addNewTaskEndDate" name="addNewTaskEndDate" ngui-datetime-picker [(ngModel)]="addNewTaskObject.endDate" [ngClass]="{'error-class':addNewTaskObject.endDate === '' && onCreateOk}"
+									 [min-date]="date2MinDate" date-format="MM/DD/YYYY hh:mm:A" parse-format="YYYY-MM-DD HH:mm:A" class="custom-textbox"
+									 [close-on-select]="false" readonly>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-6 d-flex flex-nowrap">
+								<label class="label-style">Quantity:</label>
+								<div class="text-wrapper">
+									<input type="text" class="custom-textbox" [(ngModel)]="addNewTaskObject.quantity" maxlength="9" onPaste="return false" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+									 [ngClass]="{'error-class':addNewTaskObject.quantity === '' && onCreateOk}">
+								</div>
+							</div>
+							<div class="col-6 d-flex flex-nowrap">
+								<label class="label-style">Item Number:</label>
+								<div class="text-wrapper">
+									<input type="text" class="custom-textbox" [(ngModel)]="addNewTaskObject.createPacktaskStatusItemNumber" maxlength="10" onPaste="return false"
+									 [ngClass]="{'error-class':addNewTaskObject.createPacktaskStatusItemNumber === '' && onCreateOk}" onkeypress='return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode >= 65 &&event.charCode <= 90)||(event.charCode >= 97 && event.charCode <= 122)'>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-6 d-flex flex-nowrap">
+								<label class="label-style">PullTons/Day:</label>
+								<div class="text-wrapper">
+									<input type="text" class="custom-textbox" onkeypress='return event.charCode >= 48 && event.charCode <= 57 || event.charCode === 46'
+									 maxlength="5" onPaste="return false" [(ngModel)]="addNewTaskObject.pullTonsPerDay" [ngClass]="{'error-class':addNewTaskObject.pullTonsPerDay === '' && onCreateOk}">
+								</div>
+							</div>
+							<div class="col-6 d-flex flex-nowrap">
+								<label class="label-style">Speed:</label>
+								<div class="text-wrapper">
+									<input type="text" class="custom-textbox" onkeypress='return event.charCode >= 48 && event.charCode <= 57 || event.charCode === 46'
+									 maxlength="6" onPaste="return false" [(ngModel)]="addNewTaskObject.speed" [ngClass]="{'error-class':addNewTaskObject.speed === '' && onCreateOk}">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-6 d-flex flex-nowrap">
+								<label class="label-style">Yield Factor:</label>
+								<div class="text-wrapper">
+									<input type="text" class="custom-textbox" onkeypress='return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46'
+									 maxlength="4" step="0.01" max="1" min="0" onPaste="return false" [(ngModel)]="addNewTaskObject.yieldFactor" [ngClass]="{'error-class':addNewTaskObject.yieldFactor === '' && onCreateOk}">
+								</div>
+							</div>
+							<div *ngIf="dateStatus" style="margin-top: 21px;" class="color-red">Start Date/time should not be greater than or equal to the End Date/time.</div>
+							<div *ngIf="addValidation" style="margin-top: 21px;" class="color-red">Please fill the details </div>
+							<div *ngIf="yieldFactorValidation" style="margin-top: 21px;" class="color-red">Yield factor should be in the range of 0 to 1 </div>
+						</div>
+
+
+						<div class="row">
+							<div class="col-12 checkbox-container">
+								<input type="checkbox" id="chk-pack-task" checked [(ngModel)]="addNewTaskObject.createPacktaskStatus">
+								<label for="chk-pack-task">Create Pack Task</label>
+							</div>
+							<div *ngIf="addNewTaskObject.createPacktaskStatus" class="col-6 d-flex flex-nowrap">
+								<label class="label-style">Manning:</label>
+								<div class="text-wrapper">
+									<input type="text" class="custom-textbox" onkeypress='return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46'
+									 maxlength="6" onPaste="return false" [(ngModel)]="addNewTaskObject.createPacktaskManning" [ngClass]="{'error-class':addNewTaskObject.createPacktaskManning === '' && onCreateOk}">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="pop-footer m-t-20">
+						<button class="btn btn-popup-blue" (click)="cancelNewTask()">Cancel</button>
+						<button class="btn btn-popup-blue" (click)="onOKCreateNewTask()">OK</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Add Task Popup Ends Here -->
+<!-- export popup -->
+<div class="popup-wrapper export-popup popup-visible" *ngIf="createExport">
+	<div class="popup-overlay"></div>
+	<div class="popup-container">
+		<div class="vertical-main">
+			<div class="vertical-content">
+				<div class="popup-content">
+					<h4 class="pop-title">Select Lines</h4>
+					<div class="pop-body">
+						<div class="row">
+							<div class="col-12">
+								<!-- <label class="label-style">{{selecedLine}}</label> -->
+
+							<div class="status-labels" >
+									<!-- <input type="checkbox">test -->
+									<div class="form-group" *ngFor="let popupDetails of ExportpopupDetails; let i = index">
+										<input type="checkbox" id="popupDetails-{{i}}"
+										[(ngModel)]="export[popupDetails.Name]">
+										<label for="popupDetails-{{i}}">{{popupDetails.Name}}</label>
+									</div>
+									<!-- <div class="form-group">
+										<input type="checkbox" id="Decor" name="Decor" [(ngModel)]="exportDecor">
+										<label for="Decor">Decor</label>
+									</div>
+									<div class="form-group">
+										<input type="checkbox" id="Vap" name="Vap" [(ngModel)]="exportVap">
+										<label for="Vap">VAP</label>
+									</div>
+									<div class="form-group">
+										<input type="checkbox" id="Misc" name="Misc" [(ngModel)]="exportMisc">
+										<label for="Misc">Miscellaneous</label>
+									</div> -->
+							</div>
+						</div>
+						<div class="col-12">
+								<!-- <div class="col-3">Select Date</div> -->
+								<div class="date-selection-wrapper text-datepicker">
+									<span>Select week : </span>
+									<div class="date-selector">
+										<i class="icon-previous" (click)="gotoPreviousWeek(exportDate)"></i>
+										<div class="date-range">{{weekstartExport}} - {{weekendExport}}
+											<input class="date-range datepickerInlineTextBox" date-only="true" id="exportDate" name="exportDate"
+											 #weekstartsExport ngui-datetime-picker [(ngModel)]="exportDate"  date-format="MM/DD/YYYY"
+											 parse-format="YYYY-MM-DD" [close-on-select]="true" [min-date]="date2MinDate" date-only="true" value="{{weekstartExport}}" readonly
+											 (ngModelChange)="convertToWeekDays(weekstartsExport.value)" >
+										</div>
+										<i class="icon-next" (click)="gotoNextWeek(exportDate)"></i>
+									</div>
+							</div>
+							</div>
+							<div class="col-12 week-selection-wrapper">
+								<span>Number of weeks : </span>
+								<input type="text" class="custom-textbox" [(ngModel)]="weekcountExport" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+								maxlength="4" step="0.01" max="5" min="0" onPaste="return false" maxlength="1">
+							</div>
+						</div>
+					</div>
+					<div class="pop-footer m-t-20">
+						<button class="btn btn-popup-blue" (click)="cancelExport()">Cancel</button>
+						<button class="btn btn-popup-blue" (click)="continueExport()">Continue</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Edit Task Popup Starts Here -->
+<div class="popup-wrapper popup-295 popup-visible" [hidden]="!editTaskVisible">
+	<div class="popup-overlay"></div>
+	<div class="popup-container">
+		<div class="vertical-main">
+			<div class="vertical-content">
+				<div class="popup-content">
+					<h4 class="pop-title">Edit Task
+						<a class="pull-right icon-close" (click)="editTaskClose()"></a>
+					</h4>
+					<div class="pop-body">
+						<ul class="pop-sub-links">
+							<!-- <li>
+								<a (click)="modifyTaskDuration()">Modify Task Duration</a>
+							</li>
+							<li>
+								<a [hidden]="!editTaskVisibleLiItem" (click)="changeOperatingMode()">Change Operating Mode</a>
+							</li>
+							<li>
+								<a [hidden]="!editTaskVisibleLiItem" (click)="addViewComments()">Add/View Comments</a>
+							</li> -->
+							<li>
+								<a (click)="gotoEditTask()">Edit Task</a>
+							</li>
+							<li>
+								<a [hidden]="!editTaskVisibleLiItem" (click)="unscheduleTask()">Unschedule Task</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Edit Task Popup Ends Here -->
+
+<!-- Create Task Popup Starts Here -->
+<div class="popup-wrapper popup-295 popup-visible" [hidden]="!createTaskVisible">
+	<div class="popup-overlay"></div>
+	<div class="popup-container">
+		<div class="vertical-main">
+			<div class="vertical-content">
+				<div class="popup-content">
+					<h4 class="pop-title">Create Task
+						<a class="pull-right icon-close" (click)="closeCreateTask()"></a>
+					</h4>
+					<div class="pop-body">
+						<ul class="pop-sub-links">
+							<li>
+								<a (click)="gotoCreateTaskWithGamme()">Create Task with Gamme</a>
+							</li>
+							<li>
+								<a (click)="gotoCreateTaskWithoutGamme()">Create Task without Gamme</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Create Task Popup Ends Here -->
+
+
+<!-- Freeze Schedule Popup Starts Here -->
+<div class="popup-wrapper popup-320">
+	<div class="popup-overlay"></div>
+	<div class="popup-container">
+		<div class="vertical-main">
+			<div class="vertical-content">
+				<div class="popup-content">
+					<h4 class="pop-title">Freeze Schedule</h4>
+					<div class="pop-body">
+						<p>
+							<strong>All unscheduled tasks will be lost.</strong>
+						</p>
+						<p>Do you want to continue?</p>
+					</div>
+					<div class="pop-footer m-t-20">
+						<button class="btn btn-popup-blue">Cancel</button>
+						<button class="btn btn-popup-blue">OK</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Freeze Schedule Popup Ends Here -->
+<!-- Delete Task Popup Starts Here -->
+<div class="popup-wrapper popup-320 popup-visible" [hidden]="!unscheduleTaskStatus">
+	<div class="popup-overlay"></div>
+	<div class="popup-container">
+		<div class="vertical-main">
+			<div class="vertical-content">
+				<div class="popup-content" style="width: 360px;height: 240px;">
+					<h4 class="pop-title">Unschedule Task</h4>
+					<div class="pop-body">
+						<p>
+							<strong>{{unscheduleTaskObject.unTaskName}}</strong>
+						</p>
+						<p>Are you sure you want to unschedule the task?</p>
+					</div>
+					<div class="pop-footer m-t-20">
+						<button class="btn btn-popup-blue" (click)="unscheduleTaskCancel()">Cancel</button>
+						<button class="btn btn-popup-blue" (click)="unscheduleTaskDelete()">Unschedule</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Delete Task Popup Ends Here -->
+<!-- Change Operating Mode Selection Popup Starts Here -->
+<div class="popup-wrapper popup-320 popup-co-selection">
+	<div class="popup-overlay"></div>
+	<div class="popup-container">
+		<div class="vertical-main">
+			<div class="vertical-content">
+				<div class="popup-content">
+					<h4 class="pop-title">Change Operating Mode</h4>
+					<div class="pop-body">
+						<div class="row">
+							<div class="col-12 rdb-container">
+								<input type="radio" id="gamme-check1" name="gamme-check">
+								<label for="gamme-check1">With Gamme</label>
+							</div>
+							<div class="col-12 rdb-container">
+								<input type="radio" id="gamme-check2" name="gamme-check">
+								<label for="gamme-check2">Without Gamme</label>
+							</div>
+						</div>
+					</div>
+					<div class="pop-footer m-t-20">
+						<button class="btn btn-popup-blue" (click)="unscheduleTaskCancel()">Cancel</button>
+						<button class="btn btn-popup-blue" (click)="unscheduleTaskDelete()">Ok</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Change Operating Mode Selection Popup Starts Here -->
+<!-- Change Operating Mode Popup Starts Here -->
+<div class="popup-wrapper popup-c-o-mode popup-visible" [hidden]="!changeOperatingModeStatus">
+	<div class="popup-overlay"></div>
+	<div class="popup-container">
+		<div class="vertical-main">
+			<div class="vertical-content">
+				<div class="popup-content">
+					<h4 class="pop-title">Change Operating Mode</h4>
+					<div class="pop-body">
+						<p>Item Description</p>
+						<h6>{{changeOperatingModeObject.comTaskName}}</h6>
+						<p>{{popUpLineName}}</p>
+						<div class="cust-select select-wrapper disabled-select">
+							<select disabled id="currentFormingLine" name="currentFormingLine" [(ngModel)]="changeOperatingModeObject.currentFormingLine">
+                                    <!-- <option value="0" selected>Select Line</option> -->
+                                    <option *ngFor="let formingLine of formingLineList; let i = index" value="{{formingLine.LineId}}">{{formingLine.Description}}</option>
+                                    <option *ngFor="let formingLine of formingLineList; let i = index" value="{{formingLine.LineId}}">{{formingLine.Description}}</option>
+                                <!-- <h6>{{changeOperatingModeObject.currentFormingLine}}</h6> -->
+                            </select>
+						</div>
+
+						<p>Alternate Gamme Options</p>
+						<div class="pop-table-holder">
+							<table>
+								<thead>
+									<tr>
+										<th width="70">NOM</th>
+										<th width="106">NCHANNEL</th>
+										<th width="226">LCHANNEL</th>
+										<th width="120">COLD END MANNING </th>
+									</tr>
+								</thead>
+							</table>
+							<div class="scroll-body">
+								<perfect-scrollbar>
+									<table>
+										<tbody>
+											<tr *ngFor="let Gamme of changeOperatingModeObject.alternateGammeOptions;let i =index" [ngClass]="{'alternate-highlight':i==selectedGamme}" (click)="alternateGammeOptionsSelected(Gamme,i)">
+												<td (click)="changeOperatingGammeOptions()" width="70">
+													<strong>{{Gamme.Nom}}</strong>
+												</td>
+												<td (click)="changeOperatingGammeOptions()" width="106">
+													<strong>{{Gamme.NChannel}}</strong>
+												</td>
+												<td (click)="changeOperatingGammeOptions()" width="226">
+													<strong>{{Gamme.LChannel}}</strong>
+												</td>
+												<td (click)="changeOperatingGammeOptions()" width="120">
+													<strong>{{Gamme.COLD_END_MANNING_NBR}}</strong>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</perfect-scrollbar>
+							</div>
+						</div>
+						<div *ngIf="gammeSelected" class="show-table-detail show">
+							<hr class="custom">
+							<p>Available Dates for selected Gamme</p>
+							<div class="date-selection date-selection-blk">
+								<div class="row">
+									<div class="col-6 d-flex flex-nowrap">
+										<label class="label-style">Start Date/Time:</label>
+										<div class="text-wrapper">
+											<input id="selectedGammeStartDate" name="selectedGammeStartDate" ngui-datetime-picker [(ngModel)]="changeOperatingModeObject.startDate" [min-date]="date2MinDate" [ngClass]="{'error-class':changeOperatingModeObject.startDate === '' && onchangeOk}" date-format="MM/DD/YYYY hh:mm:A" parse-format="YYYY-MM-DD HH:mm:A" class="custom-textbox" [close-on-select]="false" readonly>
+										</div>
+									</div>
+									<div class="col-6 d-flex flex-nowrap">
+										<label class="label-style">End Date/Time:</label>
+										<div class="text-wrapper">
+											<input id="selectedGammeEndDate" name="selectedGammeEndDate" ngui-datetime-picker [(ngModel)]="changeOperatingModeObject.endDate" [min-date]="date2MinDate" [ngClass]="{'error-class':changeOperatingModeObject.endDate === '' && onchangeOk}" date-format="MM/DD/YYYY hh:mm:A" parse-format="YYYY-MM-DD HH:mm:A" class="custom-textbox" [close-on-select]="false" readonly>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div *ngIf="changeDateStatus" style="margin-top: 21px;" class="color-red">Start Date/time should not be greater than or equal to the End Date/time.</div>
+						<div *ngIf="!changeValidation" style="margin-top: 21px;" class="color-red">Please fill the details </div>
+					</div>
+					<div class="pop-footer">
+						<button class="btn btn-popup-blue" (click)="changeOperatingModeCancel()">Cancel</button>
+						<button [disabled]="gammeSelected==false" class="btn btn-popup-blue" (click)="changeOperatingModeOk()">OK</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Change Operating Mode Popup Ends Here -->
+<!-- Alerts Popup Starts Here -->
+<div class="popup-wrapper popup-alert">
+	<div class="popup-overlay"></div>
+	<div class="popup-container">
+		<div class="vertical-main">
+			<div class="vertical-content">
+				<div class="popup-content">
+					<h4 class="pop-title">Alerts
+						<span class="pull-right notify">4 New</span>
+					</h4>
+					<div class="pop-body">
+						<div class="list-holder">
+							<perfect-scrollbar>
+								<ul>
+									<li class="d-flex flex-nowrap">
+										<i class="icon-warning"></i>
+										<div class="cont">
+											<p>The maximum constraint is exceeded for tuesday</p>
+											<span>Task No: 1073174</span>
+											<span>Date: 09/27/2017</span>
+										</div>
+									</li>
+									<li class="d-flex flex-nowrap">
+										<i class="icon-warning"></i>
+										<div class="cont">
+											<p>The maximum constraint is exceeded for tuesday</p>
+											<span>Task No: 1073174</span>
+											<span>Date: 09/27/2017</span>
+										</div>
+									</li>
+									<li class="d-flex flex-nowrap">
+										<i class="icon-warning"></i>
+										<div class="cont">
+											<p>The maximum constraint is exceeded for tuesday</p>
+											<span>Task No: 1073174</span>
+											<span>Date: 09/27/2017</span>
+										</div>
+									</li>
+									<li class="d-flex flex-nowrap">
+										<i class="icon-warning"></i>
+										<div class="cont">
+											<p>The maximum constraint is exceeded for tuesday</p>
+											<span>Task No: 1073174</span>
+											<span>Date: 09/27/2017</span>
+										</div>
+									</li>
+									<li class="d-flex flex-nowrap">
+										<i class="icon-warning"></i>
+										<div class="cont">
+											<p>The maximum constraint is exceeded for tuesday</p>
+											<span>Task No: 1073174</span>
+											<span>Date: 09/27/2017</span>
+										</div>
+									</li>
+									<li class="d-flex flex-nowrap">
+										<i class="icon-warning"></i>
+										<div class="cont">
+											<p>The maximum constraint is exceeded for tuesday</p>
+											<span>Task No: 1073174</span>
+											<span>Date: 09/27/2017</span>
+										</div>
+									</li>
+								</ul>
+							</perfect-scrollbar>
+						</div>
+					</div>
+					<div class="pop-footer m-t-20">
+						<button class="btn btn-popup-blue">Cancel</button>
+						<button class="btn btn-popup-blue">OK</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Alert Popup Ends Here -->
+<!-- Modify Task Duration Popup Starts Here -->
+<div class="popup-wrapper popup-m-t-duration popup-visible" [hidden]="!modifyTaskDurationStatus">
+	<div class="popup-overlay"></div>
+	<div class="popup-container">
+		<div class="vertical-main">
+			<div class="vertical-content">
+				<div class="popup-content">
+					<h4 class="pop-title">Modify Task Duration</h4>
+					<div class="pop-body">
+						<div class="d-flex justify-content-between">
+							<div>
+								<p>Item Number</p>
+								<span>{{modifyTaskDurationObject.itemNumber}} </span>
+							</div>
+							<div class="width-83">
+								<p>Task Number</p>
+								<span>{{modifyTaskDurationObject.taskNumber}}</span>
+							</div>
+							<div class="width-155">
+								<p *ngIf="modifyTaskDurationObject.PONumber!== ''">P.O Number</p>
+								<span>{{modifyTaskDurationObject.PONumber}}</span>
+							</div>
+						</div>
+						<div class="d-flex justify-content-between">
+							<div>
+								<p *ngIf="modifyTaskDurationObject.modiTaskName!== ''">Item Description</p>
+								<span>{{modifyTaskDurationObject.modiTaskName}}</span>
+							</div>
+						</div>
+						<div class="d-flex justify-content-between">
+							<div>
+								<p>Current Duration</p>
+								<h6>Start Date:
+									<span>{{modifyTaskDurationObject.currentStartDate}}</span><br/><br/> Start Time:
+									<span>{{startTimeFinal}}</span>
+								</h6>
+								<h6>End Date:
+									<span>{{modifyTaskDurationObject.currentEndDate}}</span><br/><br/> End Time:
+									<span>{{endTimeFinal}}</span>
+								</h6>
+							</div>
+							<div class="width-155">
+								<p>Current Quantity</p>
+								<span>{{modifyTaskDurationObject.currentQuantity}}</span>
+							</div>
+						</div>
+					</div>
+					<div class="modify-area">
+						<div class="d-flex justify-content-between">
+							<div class="p-l-20 active">
+								<div *ngIf="newStartDateDisableStatus !== true" class="col-12 checkbox-container">
+									<input type="checkbox" id="chk-pack-task" checked [(ngModel)]="modifyTaskDurationObject.keepDurationConstantStatus" (ngModelChange)="keepDurationConstantChange()">
+									<label for="chk-pack-task">Keep duration constant</label>
+								</div>
+								<p>New Duration</p>
+								<label class="label-style">Start Date/Time:</label>
+								<div class="text-wrapper">
+									<input [disabled]="newStartDateDisableStatus==true" id="newDurationStartDate" name="newDurationStartDate" ngui-datetime-picker [(ngModel)]="modifyTaskDurationObject.newStartDate" (ngModelChange)="newDurationStartDateChange()" [min-date]="date2MinDate" date-format="MM/DD/YYYY hh:mm:A" parse-format="YYYY-MM-DD HH:mm:A" class="custom-textbox" [close-on-select]="false" readonly>
+								</div>
+								<label class="label-style">End Date/Time:</label>
+								<div class="text-wrapper">
+									<input id="newDurationEndDate" name="newDurationEndDate" date-format="MM/DD/YYYY hh:mm:A" parse-format="YYYY-MM-DD HH:mm:A" [min-date]="date2MinDate" class="custom-textbox" ngui-datetime-picker [close-on-select]="false" readonly [(ngModel)]="modifyTaskDurationObject.newEndDate" (ngModelChange)="newDurationEndDateChange()" [disabled]="modifyTaskDurationObject.keepDurationConstantStatus === true && newStartDateDisableStatus!==true">
+								</div>
+							</div>
+							<div class="width-155 active">
+								<p>New Quantity</p>
+								<div class="text-wrapper">
+									<input [disabled]="modifyTaskDurationObject.keepDurationConstantStatus === true" type="text" class="custom-textbox" id="newQuantity" name="newQuantity" [(ngModel)]="modifyTaskDurationObject.newQuantity" maxlength="9" onPaste="return false" onkeypress='return event.charCode >= 48 && event.charCode <= 57' style="font-size:14px;" (ngModelChange)="newQuantityChange()" (blur)="onBlurNewQuantityChange()" [ngClass]="{'error-class':modifyTaskDurationObject.newQuantity === '' && onModifyTaskDurationOk}">
+								</div>
+							</div>
+						</div>
+						<div class="select-wrapper">
+							<select id="reasonforChangeValue" name="reasonforChangeValue" [(ngModel)]="modifyTaskDurationObject.reasonforChange">
+                                <option value="0" selected>Reason for change</option>
+                                <option *ngFor="let reasonforChange of reasonforChangeList; let i = index" value="{{reasonforChange.TaskReasonForChangeID}}">{{reasonforChange.TaskReasonForChangeName}}</option>
+                            </select>
+						</div>
+						<div *ngIf="dateStatus" style="margin-top: 21px;" class="color-red">Start Date/time should not be greater than the End Date/time.</div>
+						<div *ngIf="modifyValidation" style="margin-top: 21px;" class="color-red">Please fill the details</div>
+					</div>
+					<div class="pop-footer">
+						<button class="btn btn-popup-blue" (click)="modifyTaskDurationCancel()">Cancel</button>
+						<button class="btn btn-popup-blue" (click)="modifyTaskDurationOk()">OK</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Modify Task Duration Popup Ends Here -->
+<!-- Comments Popup Starts Here -->
+<div class="popup-wrapper popup-comments popup-visible" [hidden]="!addViewCommentsStatus">
+	<div class="popup-overlay"></div>
+	<div class="popup-container">
+		<div class="vertical-main">
+			<div class="vertical-content">
+				<div class="popup-content">
+					<h4 class="pop-title">Comments</h4>
+					<div class="pop-body">
+						<div class="cmt-list-holder">
+							<perfect-scrollbar>
+								<ul>
+									<li class="d-flex flex-nowrap">
+										<h6 class="u-name">User 1:</h6>
+										<p>The comment from user on this particular task will be displayed here.
+											<span>2 hrs ago</span>
+										</p>
+									</li>
+									<li class="d-flex flex-nowrap">
+										<h6 class="u-name">User 1:</h6>
+										<p>The comment from user on this particular task will be displayed here.
+											<span>2 hrs ago</span>
+										</p>
+									</li>
+								</ul>
+							</perfect-scrollbar>
+							<textarea rows="3" placeholder="Type your comment here..."></textarea>
+						</div>
+					</div>
+					<div class="pop-footer m-t-20">
+						<button class="btn btn-popup-blue" (click)="addViewCommentsCancel()">Cancel</button>
+						<button class="btn btn-popup-blue" (click)="addViewCommentsOk()">OK</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="popup-wrapper popup-m-t-duration popup-50 popup-visible" *ngIf="jobChangesPopUp">
+	<div class="popup-overlay"></div>
+	<div class="popup-container">
+		<div class="vertical-main">
+			<div class="vertical-content">
+				<div class="popup-content">
+					<div class="row pop-title-wrapper">
+						<div class="col-4">
+							<h4 class="pop-title">Job Change Details</h4>
+						</div>
+						<div class="col-4 text-right" *ngIf="approvedBy !== null">
+							Last Approved By: <span>{{approvedBy}}</span>
+						</div>
+						<div class="col-4 text-right" *ngIf="approvedDate !== null">
+							Approved Date: <span>{{approvedDate}}</span>
+						</div>
+					</div>
+					<div class="pop-body">
+						<div class="row">
+							<div class="col-6 m-t-20">
+								<h6>Day : <span>{{popUpDetailsdate| date: 'MM/dd/yyyy'}}</span></h6>
+							</div>
+							<div class="col-6 m-t-20">
+								<h6>Group Id : <span>{{popUpDetailsgroupId}}</span></h6>
+							</div>
+						</div>
+						<div class="pop-table-holder">
+							<table>
+								<thead>
+									<tr>
+										<th width="112">Forming Line</th>
+										<th width="100">Task Number</th>
+										<th width="100">Item Number</th>
+										<th width="210">Item Description </th>
+									</tr>
+								</thead>
+							</table>
+							<div class="scroll-body">
+								<perfect-scrollbar>
+									<table>
+										<tbody>
+											<tr *ngFor="let popUpTableDetails of popUpDetails; let i = index">
+												<td width="112">
+													<strong>{{popUpTableDetails.LineID}}</strong>
+												</td>
+												<td width="100">
+													<strong>{{popUpTableDetails.TaskNumber}}</strong>
+												</td>
+												<td width="100">
+													<strong>{{popUpTableDetails.ItemNumber}}</strong>
+												</td>
+												<td width="210">
+													<strong>{{popUpTableDetails.ItemDecription}}</strong>
+												</td>
+											</tr>
+											<tr *ngIf="popUpDetails.length === 0">
+												<td colspan="4" class="no-records-td">
+												  <strong>No Records Found</strong>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</perfect-scrollbar>
+							</div>
+						</div>
+
+					</div>
+					<div class="pop-footer m-t-20">
+						<div class="approvername" *ngIf="(access === true && approveJobChanges)">
+							<span>
+								Approver's Name<span class="required">*</span> :
+							</span>
+							<div class="text-wrapper">
+									<!-- <ng-select [items]="userNameList"
+									bindLabel="UserName"
+									bindValue="Id"
+									placeholder="Approver Name"
+									name="userNameTypeahead"
+									class="typeahead approvername-select"
+									onkeypress='return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122)'
+									(add) = "getUserDescription(userName)"
+									(clear)="clearUserName($event)"
+									[typeahead]="userNameTypeahead"
+									[ngClass]="{'error-class':!userName && approveClick}"
+									[(ngModel)]="userName">
+								   <ng-template ng-option-tmp let-item="item">
+									   {{item.UserName}}
+								   </ng-template>
+								 </ng-select> -->
+								 <input type="text" class="custom-textbox" [(ngModel)]="userName" maxlength="30" onPaste="return false"
+									 [ngClass]="{'error-class':userName === '' && approveClick}" onkeypress='return (event.charCode >= 65 &&event.charCode <= 90)||(event.charCode == 32)||(event.charCode >= 97 && event.charCode <= 122)'>
+							</div>
+						</div>
+						<button class="btn btn-popup-blue" [disabled]="!approveJobChanges" *ngIf="(access === true)" (click)="approvejobChanges()">Approve</button>
+						<button class="btn btn-popup-blue" (click)="canceljobChangesPopUp()">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Comments Popup Ends Here -->
+<!-- Reschedule Task Popup Starts Here -->
+<div class="popup-wrapper popup-c-o-mode popup-visible" [hidden]="!rescheduleTask">
+	<div class="popup-overlay"></div>
+	<div class="popup-container">
+		<div class="vertical-main">
+			<div class="vertical-content">
+				<div class="popup-content">
+					<h4 class="pop-title">Reschedule Task</h4>
+					<div class="pop-body">
+						<div class="d-flex justify-content-between">
+							<div>
+								<p>Forming Line</p>
+								<h6>{{rescheduleTaskObject.currentFormingLine}} </h6>
+							</div>
+						</div>
+						<div class="date-selection p-r-20">
+							<div class="row">
+								<div class="col-6 d-flex flex-nowrap">
+									<label class="label-style">Start Date/Time:</label>
+									<div class="text-wrapper">
+										<input id="startDate" name="startDate" ngui-datetime-picker [(ngModel)]="rescheduleTaskObject.startDate" [ngClass]="{'error-class':rescheduleTaskObject.startDate === '' && rescheduleTaskOk}" (ngModelChange)="RescheduleStartDateChange()" [default-value]="minDate" [min-date]="date2MinDate" date-format="MM/DD/YYYY hh:mm:A" parse-format="YYYY-MM-DD HH:mm:A" class="custom-textbox" [close-on-select]="false" readonly>
+									</div>
+								</div>
+								<div class="col-6 d-flex flex-nowrap">
+									<label class="label-style">End Date/Time:</label>
+									<div class="text-wrapper">
+										<input id="endDate" name="endDate" ngui-datetime-picker [(ngModel)]="rescheduleEndDate" date-format="MM/DD/YYYY hh:mm:A" parse-format="YYYY-MM-DD HH:mm:A" [min-date]="date2MinDate" class="custom-textbox" [close-on-select]="false" disabled>
+									</div>
+								</div>
+								<div class="col-12">
+									<div *ngIf="modifyValidation" style="margin-top: 21px;" class="color-red">Please fill the details</div>
+								</div>
+							</div>
+						</div>
+						<div class="pop-footer">
+							<button class="btn btn-popup-blue" (click)="OnRescheduleCancel('unscheduledTasks')">Cancel</button>
+							<button class="btn btn-popup-blue" (click)="OnRescheduleOk()">OK</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Reschedule Task Popup Ends Here -->
+<div *ngIf="false" class="popup-wrapper createNewTask popup-visible ">
+  <div class="popup-overlay"></div>
+  <div class="popup-container">
+    <div class="popup-content">
+      <h4 class="pop-title">Select Task</h4>
+      <div class="pop-body">
+				<div class="row form-group">
+					<div class="col-4">
+						<span>Task :</span>
+					</div>
+					<div class="col-8">
+						<div class="dropdown">
+	            <div class="select-box">
+	              <select class="custom-select form-control">
+	                <option selected>Select</option>
+									<option >With Gamme Option</option>
+									<option >Without Gammer Option</option>
+	              </select>
+	            </div>
+	          </div>
+					</div>
+				</div>
+      </div>
+      <div class="pop-footer m-t-20">
+        <button class="btn btn-popup-blue">Cancel</button>
+        <button class="btn btn-popup-blue">Create</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Approve Confirmation Popup Start-->
+<div class="popup-wrapper confirm-changes popup-visible" *ngIf="approvePopUpShow">
+	<div class="popup-overlay"></div>
+	<div class="popup-container">
+		<div class="vertical-main">
+			<div class="vertical-content">
+				<div class="popup-content">
+					<h4 class="pop-title">Job Change Approval</h4>
+					<div class="pop-body">
+						<div class="row">
+							<div class="col-12">
+								<p>Are you sure you want to approve {{taskCount}} job changes?</p>
+							</div>
+						</div>
+						<div class="pull-right">
+							<button class="btn btn-blue" (click)="onApproveYes()" type="button">Yes</button>
+							<button class="btn btn-blue" (click)="onApproveNo()" type="button">No</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Approve Confirmation Popup End -->
+<router-outlet></router-outlet>
+<!--Loader-->
+<app-loader id="appLoader" [hidden]="!loading"></app-loader>

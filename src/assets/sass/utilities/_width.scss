@@ -1,0 +1,24 @@
+
+// Width Common Style
+[class^="width-"], [class*=" width-"] {
+
+}
+
+// Generate Width
+@include generate-width;
+
+.width-full{
+  width: 100% !important;
+}
+
+.width-half-quarter{
+  width: 75% !important;
+}
+
+.width-half{
+  width: 50% !important;
+}
+
+.width-quarter{
+  width: 25% !important;
+}

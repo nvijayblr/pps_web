@@ -1,0 +1,31 @@
+.sticky-container{
+  position: relative;
+  width: 100%;
+  height: auto;
+  display: block;
+
+  .stickyBox{
+    top: 6.2rem !important;
+    background-color: #ffffff;
+    display: grid !important;
+  }
+  .sticky-content{
+    background: #ffffff;
+    border-top: solid 1px #e1e5e8;
+    border-right: solid 1px #e1e5e8;
+    border-left: solid 1px #e1e5e8;
+    border-radius: inherit;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
+  }
+  .stickyBox-unset{
+    display: block !important;
+    bottom: inherit !important;
+    z-index: 10 !important;
+  }
+  .table-holder{
+    border-top: none;
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+  }
+}

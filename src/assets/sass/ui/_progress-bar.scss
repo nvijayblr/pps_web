@@ -1,0 +1,32 @@
+/* Progressbar */
+
+.progress {
+	background: rgba(219, 222, 223, .5);
+	height: rem(6);
+	border-radius: rem(3);
+	float: left;
+	span {
+		height: rem(6);
+		border-radius: rem(3);
+		float: left;
+	}
+}
+
+.progress-yellow span {
+	background: #ffd100;
+}
+
+.progress-green span {
+	background: #39b54a;
+}
+
+.progress-red span {
+	background: #eb5874;
+}
+
+.progress-value {
+	font-size: $font-normal;
+	line-height: .4rem;
+	color: $active-color;
+	float: right;
+}

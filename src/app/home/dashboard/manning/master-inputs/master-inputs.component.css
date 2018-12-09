@@ -1,0 +1,109 @@
+.btn-edit{
+    float: right;
+}
+.btn-edit.btn-popup-blue{
+    margin-left:.875rem;
+    font-size:.875rem;
+    padding: .48rem 1.375rem;
+}
+.edit-textbox{
+    width:5rem;
+    height:1.125rem;
+    text-align: center;
+}
+.secondary-block{
+    padding: 1.875rem 1.25rem 5rem;
+}
+.cust-table-holder{
+    margin-top:0;      
+}
+.cust-table-holder tbody td:not(:first-child),.cust-table-holder thead th:not(:first-child){
+    text-align: center;
+}
+.custom-table{
+    background: #fff;
+}
+.custom-table thead{
+    background: #fff;
+}
+.custom-table thead .col-title{
+    border-bottom:solid 1px #fff;
+    font-family: "Arial-BoldMT";
+}
+.custom-table thead .col-wks{
+    border-bottom:solid 1px #dbe1e5;
+}
+.custom-table thead .col-wk{
+    color:#312857;
+}
+.data-cols .col-title{
+    font-family: "ArialMT";
+}
+.data-cols .cell{
+    text-align: center;
+}
+.data-cols .cell label{
+    line-height:2.4375rem;
+    font-size: 1.125rem;
+    color:#312857;
+    font-family: "ArialMT";
+}
+.text-edit{
+    border: 0;
+    color: #312857;
+    font-size: 1.125rem;
+    background: none;
+    border-bottom: solid 1px rgba(49, 40, 87, 0.1);
+    padding: 0;
+    line-height:2.4375rem;
+    width:80%;
+    margin:0 10%;
+    text-align: center;
+}
+.table-holder{
+    margin-bottom:3rem;
+}
+.crew-filter{
+    margin-bottom:1.5rem;
+}
+.crew-filter label{
+    color: #312857;
+    font-size:1rem;
+    font-family: "Arial-BoldMT";
+    margin-right:1.25rem;
+}
+.custom-select-style{
+    width:11.5625rem;
+    position: relative;
+}
+.custom-select-style select{
+    box-shadow: 0px 2px 2.94px 0.06px rgba(149, 150, 150, 0.13);
+    border-radius:.25rem;
+    color: rgba(49,40,87,.7);
+    border:solid 1px #dbe1e5;
+    padding: 0.3125rem .75rem;
+}
+.custom-select-style:after{
+    width: 0; 
+    height: 0; 
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #c1becc;
+    content:"";
+    position: absolute;
+    top:50%;
+    right:.75rem;
+    margin-top:-0.15625rem;
+    pointer-events: none;
+}
+.pos-relative{
+    position: relative;
+}
+.pos-abs{
+    position: absolute;
+}
+.empty {
+    background-color:#eee;
+    color: black;
+
+}

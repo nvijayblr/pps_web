@@ -1,0 +1,93 @@
+<header class="app-header export-header">
+  <div class="form-container" id="headerContainer">
+    <button (click)="onPrint()">Print</button>
+    <!-- <button (click)="download()">Download PDF</button> -->
+    <a class="pull-right icon-close" (click)="closeExport()"></a>
+  </div>
+</header>
+<div class="pages A4 landscape">
+  <ng-container *ngFor="let listPage of fullList; let k = index">
+    <ng-container *ngFor="let testPage of listPage; let v = index">
+      <ng-container *ngFor="let page of testPage.pages; let p = index" [class.first]="k==0 && v==0 && p == 0">
+        <div class="sheet padding-10mm">
+          <h4>Scheduled Tasks from {{testPage.startDay | date: 'MM.dd.yyyy'}} to {{testPage.endday | date: 'MM.dd.yyyy'}}</h4>
+          <!-- <div class="form-container">
+            <button (click)="onPrint()" *ngIf="p==0 && testPage.ProductionType=='Primary'">Export</button>
+            <button (click)="download()" *ngIf="p==0">Download PDF</button>
+          </div> -->
+
+          <div class="container-p">
+
+            <div class="head-section">
+              <div class="col-p-2">
+                <span *ngIf="testPage.ProductionType=='Primary'">Forming Lines</span>
+                <span *ngIf="testPage.ProductionType!=='Primary'">{{testPage.ProductionType}} Lines</span>
+              </div>
+              <div class="col-p-10 no-gutters seven-cols">
+                <div class="tight">
+                  <div class="col-p" *ngFor="let days of testPage.weekdays">
+                    <div class="col-p-12"><span>{{days.DisplayName}}</span></div>
+                    <div class="col-p-4 first"><span>12 AM</span></div>
+                    <div class="col-p-4"><span>8 AM</span></div>
+                    <div class="col-p-4 last"><span>4 AM</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="head-second-section" *ngIf="testPage.ProductionType=='Primary'">
+              <ng-container *ngFor="let formlistdata of progressFurnaces; let m = index">
+                <div class="col-p-2">
+                  <span>{{formlistdata.FurnaceName}}</span>
+                  <span>(&nbsp;{{formlistdata.DefaultCapacity}}&nbsp;)</span>
+                </div>
+                <div class="col-p-10 no-gutters seven-cols">
+                  <div class="tight">
+                  <div class="col-p" *ngFor="let tonState of page.TonStates; let i = index" [style.width]="(i===0||i===7)?'4.846%': '14.2857%;'">
+                    <ng-container *ngFor="let Furnace of tonState.Furnaces; let j = index">
+                      <div class="col-p-12" *ngIf="j==m" style="text-align: center;">{{Furnace.CurrentUtilization}}</div>
+                    </ng-container>
+                  </div>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+
+            <div class="schedule-group"*ngFor="let formlist of page.FormingLines">
+              <div class="col-p-2">
+                <span>{{formlist.LineName}}</span>
+              </div>
+              <div class="col-p-10 schedules no-gutters seven-cols">
+                <div class="tight">
+                <div class="col-p" *ngFor="let DaysVal of formlist.Days">
+                  <div class="col-p-4" *ngFor="let desc of DaysVal.Tasks; let p = index">
+                    <div class="cell" *ngIf="!desc.IsContinueation" [ngStyle]="desc.style">{{desc.Description}} {{desc.ItemNumber}}
+                      <p> <span *ngIf="desc.ProductionOrder !== ''">P.O. {{desc.ProductionOrder}} {{desc.ProductDiamension}}</span> </p>
+                      <p *ngIf="formlist.IsFurnaceTagged">{{desc.BeginDate | date:'shortTime'}} {{desc.ItemsPerMinute}} items/min {{desc.PullTonsPerDay}} t/day {{desc.NTables}}x{{desc.NMolds}} {{desc.SpeedFactor}}</p>
+                      <p *ngIf="!formlist.IsFurnaceTagged">{{desc.BeginDate | date:'shortTime'}} {{desc.ItemsPerMinute}} items/min {{desc.NTables}}x{{desc.NMolds}} {{desc.SpeedFactor}} </p>
+                    </div>
+                  </div>
+                </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <h5 *ngIf="testPage.ProductionType=='Primary'">Forming Schedule (Total:
+            <span>{{page.pagenumber}}</span>/
+            <span>{{total}}</span>) Printing date {{today}} Printed By: {{username}}</h5>
+
+          <h5 *ngIf="testPage.ProductionType!=='Primary'">{{testPage.ProductionType}} Schedule (Total:
+            <span>{{page.pagenumber}}</span>/
+            <span>{{total}}</span>) Printing date {{today}} Printed By: {{username}}</h5>
+          <!-- <h5>(Total: <span>{{(p+1)*(v+1)}}</span>/<span>{{totalPages}}</span>) Printing date {{today}}</h5> -->
+          <!-- <h5> Printing date {{today| date: 'dd.MM.yyyy hh:mm:ss'}}</h5> -->
+
+        </div>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+</div>
+
+<app-loader id="appLoader" [hidden]="!loading"></app-loader>

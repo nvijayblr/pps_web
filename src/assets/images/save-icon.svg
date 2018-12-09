@@ -1,0 +1,15 @@
+<svg width="167" height="182.00000000000003" xmlns="http://www.w3.org/2000/svg">
+
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="184" width="169" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <path id="svg_2" stroke-width="10" stroke-miterlimit="10" stroke-linejoin="round" stroke-linecap="round" stroke="#000000" fill="none" d="m160.424804,176.249621l-153,0l0,-170l130.4,0c8.8,8.8 13.8,13.8 22.6,22.6l0,147.4z"/>
+  <rect id="svg_3" y="6.149621" x="34.924804" width="98" stroke-width="10" stroke-miterlimit="10" stroke-linejoin="round" stroke-linecap="round" stroke="#000000" height="49.5" fill="none"/>
+  <line id="svg_4" y2="106.549621" y1="106.549621" x2="132.924804" x1="34.924804" stroke-width="10" stroke-miterlimit="10" stroke-linejoin="round" stroke-linecap="round" stroke="#000000" fill="none"/>
+  <line id="svg_5" y2="133.549621" y1="133.549621" x2="132.924804" x1="34.924804" stroke-width="10" stroke-miterlimit="10" stroke-linejoin="round" stroke-linecap="round" stroke="#000000" fill="none"/>
+  <line id="svg_6" y2="38.749621" y1="18.749621" x2="83.924804" x1="83.924804" stroke-width="10" stroke-miterlimit="10" stroke-linejoin="round" stroke-linecap="round" stroke="#000000" fill="none"/>
+ </g>
+</svg>

@@ -1,0 +1,529 @@
+<section class="main-container">
+    <!-- Top Navigation Starts Here -->
+    <div class="top-section">
+        <ul class="page-nav">
+            <li *ngFor="let button of manningLiButtons; let i = index" (click)="onLiBtnclick(button.name)" [class.current]="isLiItemClicked==button.name">
+                <a title="{{button.name}}">{{button.name}}</a>
+            </li>
+        </ul>
+    </div>
+    <!-- Top Navigation Ends Here -->
+    <!-- Custom Nav Starts Here -->
+    <div class="custom-nav">
+        <ul>
+            <li class="current">
+                <a>Crew Details</a>
+            </li>
+        </ul>
+        <div class="date-selector invisibleDatePicker pull-right">
+            <span class="plain-text">Date</span>
+            <i class="icon-previous" (click)="onPreviousWeekdate()"></i>
+            <!-- <span class="date-range">{{weekStartday}} – {{weekEndday}}</span> -->
+            <span class="date-range">{{weekStartday}} – {{weekEndday}}
+                <input class="date-range datepickerInlineTextBox" (ngModelChange)="weekPicker(weekstarts.value)" date-only="true" id="weekstart"
+                    name="weekstart" #weekstarts ngui-datetime-picker [(ngModel)]="weekstart" [min-date]="date2MinDate" date-format="MM/DD/YYYY"
+                    parse-format="YYYY-MM-DD" [close-on-select]="true" [default-value]="defaultDay" date-only="true" readonly>
+            </span>
+            <i class="icon-next" (click)="onFutureWeekdate()"></i>
+        </div>
+    </div>
+    <!-- Custom Nav Ends Here -->
+    <!-- Content Area Starts Here -->
+    <div class="content-area">
+        <!-- Table Holder Starts Here -->
+        <div class="edit-button-group pull-right">
+          <button class="btn btn-blue m-b-15" id="" *ngIf="!isEditManningRole" (click)="masterInputEdit()">Edit</button>
+          <button class="btn btn-blue m-b-15" id="" *ngIf="isEditManningRole" (click)="masterInputSave()">Save</button>
+          <button class="btn btn-blue m-b-15" id="" *ngIf="isEditManningRole" (click)="masterInputCancel()">Cancel</button>
+        </div>
+        <div class="table-holder pos-relative master-input-edit">
+          <sticky sticky-offset-top="68" sticky-zIndex="3" [sticky-parent]="true" sticky-class="ManningInputStickyBox" sticky-end-class="ManningInputStickyBox-Unset">
+            <div>
+              <table class="custom-table">
+                <!-- table Header Starts Here -->
+                <thead>
+                    <tr>
+                        <th class="col-title">Manning Roles</th>
+                        <th class="col-wks">
+                            <div class="col-wk col" *ngFor="let day of weekDays; let i = index">
+                                {{day.DisplayName}}
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="col-sub">
+                        <td class="col-title"></td>
+                        <td class="col-wks">
+                            <div class="col-wk col" *ngFor="let time of timeSlot; let i = index">
+                                <div class="cell split-3">{{time.first12}}</div>
+                                <div class="cell split-3">{{time.middle8}}</div>
+                                <div class="cell split-3">{{time.last4}}</div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+          </sticky>
+            <!-- table Ends Here -->
+            <!-- table Body Starts Here -->
+            <div class="scrollable-body  master-input-edit">
+                    <table class="custom-table scroll-table">
+                        <!-- table Body Starts Here -->
+                        <tbody>
+                            <tr class="data-cols">
+                                <td class="col-title">M-F CREW</td>
+                                <td class="col-wks">
+                                    <div class="col-wk col" *ngFor="let daysVal of weekDays; let i = index">
+                                        <div class="cell split-3">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[0].MF_CREW}}</label>
+                                            <input *ngIf="isEditManningRole" type="text" [(ngModel)]="daysVal.ManningRoleShift[0].MF_CREW" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                        <div class="cell split-3">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[1].MF_CREW}}</label>
+                                            <input *ngIf="isEditManningRole" type="text" [(ngModel)]="daysVal.ManningRoleShift[1].MF_CREW" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                        <div class="cell split-3">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[2].MF_CREW}}</label>
+                                            <input *ngIf="isEditManningRole" type="text" [(ngModel)]="daysVal.ManningRoleShift[2].MF_CREW" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="data-cols">
+                                <td class="col-title">TPIN Watcher</td>
+                                <td class="col-wks">
+                                    <div class="col-wk col" *ngFor="let daysVal of weekDays; let i = index">
+                                        <div class="cell split-3">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[0].TPINWatcher}}</label>
+                                            <input *ngIf="isEditManningRole" type="text" [(ngModel)]="daysVal.ManningRoleShift[0].TPINWatcher" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                        <div class="cell split-3">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[1].TPINWatcher}}</label>
+                                            <input *ngIf="isEditManningRole" type="text" [(ngModel)]="daysVal.ManningRoleShift[1].TPINWatcher" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                        <div class="cell split-3">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[2].TPINWatcher}}</label>
+                                            <input *ngIf="isEditManningRole" type="text" [(ngModel)]="daysVal.ManningRoleShift[2].TPINWatcher" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="data-cols">
+                                <td class="col-title">Housekeeper</td>
+                                <td class="col-wks">
+                                    <div class="col-wk col" *ngFor="let daysVal of weekDays; let i = index">
+                                        <div class="cell split-3">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[0].HouseKeeper}}</label>
+                                            <input *ngIf="isEditManningRole" type="text" [(ngModel)]="daysVal.ManningRoleShift[0].HouseKeeper" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                        <div class="cell split-3">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[1].HouseKeeper}}</label>
+                                            <input *ngIf="isEditManningRole" type="text" [(ngModel)]="daysVal.ManningRoleShift[1].HouseKeeper" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                        <div class="cell split-3">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[2].HouseKeeper}}</label>
+                                            <input *ngIf="isEditManningRole" type="text" [(ngModel)]="daysVal.ManningRoleShift[2].HouseKeeper" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="data-cols">
+                                <td class="col-title">Loaders</td>
+                                <td class="col-wks">
+                                    <div class="col-wk col" *ngFor="let daysVal of weekDays; let i = index">
+                                        <div class="cell split-3">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[0].Loaders}}</label>
+                                            <input *ngIf="isEditManningRole" type="text" [(ngModel)]="daysVal.ManningRoleShift[0].Loaders" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                        <div class="cell split-3">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[1].Loaders}}</label>
+                                            <input *ngIf="isEditManningRole" type="text" [(ngModel)]="daysVal.ManningRoleShift[1].Loaders" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                        <div class="cell split-3">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[2].Loaders}}</label>
+                                            <input *ngIf="isEditManningRole" type="text" [(ngModel)]="daysVal.ManningRoleShift[2].Loaders" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="data-cols">
+                                <td class="col-title">Overman_BU</td>
+                                <td class="col-wks">
+                                    <div class="col-wk col" *ngFor="let daysVal of weekDays; let i = index">
+                                        <div class="cell split-3">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[0].OvermanBU}}</label>
+                                            <input *ngIf="isEditManningRole" type="text" [(ngModel)]="daysVal.ManningRoleShift[0].OvermanBU" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                        <div class="cell split-3">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[1].OvermanBU}}</label>
+                                            <input *ngIf="isEditManningRole" type="text" [(ngModel)]="daysVal.ManningRoleShift[1].OvermanBU" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                        <div class="cell split-3">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[2].OvermanBU}}</label>
+                                            <input *ngIf="isEditManningRole" type="text" [(ngModel)]="daysVal.ManningRoleShift[2].OvermanBU" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="data-cols">
+                                <td class="col-title">Crew</td>
+                                <td class="col-wks">
+                                    <div class="col-wk col" *ngFor="let daysVal of weekDays; let i = index">
+                                        <div class="cell split-3">
+                                            <label>{{daysVal.ManningRoleShift[0].CrewName}}</label>
+                                        </div>
+                                        <div class="cell split-3">
+                                            <label>{{daysVal.ManningRoleShift[1].CrewName}}</label>
+                                        </div>
+                                        <div class="cell split-3">
+                                            <label>{{daysVal.ManningRoleShift[2].CrewName}}</label>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="data-cols crew-col">
+                                <td class="col-title" rowspan="2">
+                                    Crew A
+                                    <div class="col-sub-title">
+                                        Vacation
+                                    </div>
+                                    <div class="col-sub-title">
+                                        Absent
+                                    </div>
+                                </td>
+                                <td class="col-wks">
+                                    <div class="col-wk col" *ngFor="let daysVal of weekDays; let i = index">
+                                        <div class="cell split-3" [ngClass]="{'empty':daysVal.ManningRoleShift[0].CrewA_Vaccation ===''}">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[0].CrewA_Vaccation}}</label>
+                                            <input *ngIf="isEditManningRole" [disabled]="!daysVal.ManningRoleShift[0].enableEdit ||daysVal.ManningRoleShift[0].enableEditC || daysVal.ManningRoleShift[0].enableEditB" type="text" [(ngModel)]="daysVal.ManningRoleShift[0].CrewA_Vaccation" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                        <div class="cell split-3"  [ngClass]="{'empty':daysVal.ManningRoleShift[1].CrewA_Vaccation ===''}">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[1].CrewA_Vaccation}}</label>
+                                            <input *ngIf="isEditManningRole" [disabled]="!daysVal.ManningRoleShift[1].enableEdit || daysVal.ManningRoleShift[1].enableEditC || daysVal.ManningRoleShift[1].enableEditB" type="text" [(ngModel)]="daysVal.ManningRoleShift[1].CrewA_Vaccation" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                        <div class="cell split-3"  [ngClass]="{'empty':daysVal.ManningRoleShift[2].CrewA_Vaccation ===''}">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[2].CrewA_Vaccation}}</label>
+                                            <input *ngIf="isEditManningRole" [disabled]="!daysVal.ManningRoleShift[2].enableEdit || daysVal.ManningRoleShift[2].enableEditC || daysVal.ManningRoleShift[2].enableEditB" type="text" [(ngModel)]="daysVal.ManningRoleShift[2].CrewA_Vaccation" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="data-cols crew-col">
+                                <td class="col-wks">
+                                    <div class="col-wk col" *ngFor="let daysVal of weekDays; let i = index">
+                                        <div class="cell split-3" [ngClass]="{'empty':daysVal.ManningRoleShift[0].CrewA_Absent ===''}">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[0].CrewA_Absent}}</label>
+                                            <input *ngIf="isEditManningRole" type="text" [disabled]="!daysVal.ManningRoleShift[0].enableEdit || daysVal.ManningRoleShift[0].enableEditC || daysVal.ManningRoleShift[0].enableEditB" [(ngModel)]="daysVal.ManningRoleShift[0].CrewA_Absent" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                        <div class="cell split-3"  [ngClass]="{'empty':daysVal.ManningRoleShift[1].CrewA_Absent ===''}">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[1].CrewA_Absent}}</label>
+                                            <input *ngIf="isEditManningRole" type="text" [disabled]="!daysVal.ManningRoleShift[1].enableEdit || daysVal.ManningRoleShift[1].enableEditC || daysVal.ManningRoleShift[1].enableEditB" [(ngModel)]="daysVal.ManningRoleShift[1].CrewA_Absent" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                        <div class="cell split-3" [ngClass]="{'empty':daysVal.ManningRoleShift[2].CrewA_Absent ===''}">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[2].CrewA_Absent}}</label>
+                                            <input *ngIf="isEditManningRole" type="text" [disabled]="!daysVal.ManningRoleShift[2].enableEdit || daysVal.ManningRoleShift[2].enableEditC || daysVal.ManningRoleShift[2].enableEditB" [(ngModel)]="daysVal.ManningRoleShift[2].CrewA_Absent" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="data-cols crew-col">
+                                <td class="col-title" rowspan="2">
+                                    Crew B
+                                    <div class="col-sub-title">
+                                        Vacation
+                                    </div>
+                                    <div class="col-sub-title">
+                                        Absent
+                                    </div>
+                                </td>
+                                <td class="col-wks">
+                                    <div class="col-wk col" *ngFor="let daysVal of weekDays; let i = index">
+                                        <div class="cell split-3"  [ngClass]="{'empty':daysVal.ManningRoleShift[0].CrewB_Vaccation ===''}">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[0].CrewB_Vaccation}}</label>
+                                            <input *ngIf="isEditManningRole" type="text" [disabled]="daysVal.ManningRoleShift[0].enableEdit || daysVal.ManningRoleShift[0].enableEditC || !daysVal.ManningRoleShift[0].enableEditB" [(ngModel)]="daysVal.ManningRoleShift[0].CrewB_Vaccation" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                        <div class="cell split-3" [ngClass]="{'empty':daysVal.ManningRoleShift[1].CrewB_Vaccation ===''}">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[1].CrewB_Vaccation}}</label>
+                                            <input *ngIf="isEditManningRole" [disabled]="daysVal.ManningRoleShift[1].enableEdit || daysVal.ManningRoleShift[1].enableEditC || !daysVal.ManningRoleShift[1].enableEditB" type="text" [(ngModel)]="daysVal.ManningRoleShift[1].CrewB_Vaccation" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                        <div class="cell split-3" [ngClass]="{'empty':daysVal.ManningRoleShift[2].CrewB_Vaccation ===''}">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[2].CrewB_Vaccation}}</label>
+                                            <input *ngIf="isEditManningRole" type="text"  [disabled]="daysVal.ManningRoleShift[2].enableEdit || daysVal.ManningRoleShift[2].enableEditC || !daysVal.ManningRoleShift[2].enableEditB" [(ngModel)]="daysVal.ManningRoleShift[2].CrewB_Vaccation" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="data-cols crew-col">
+                                <td class="col-wks">
+                                    <div class="col-wk col" *ngFor="let daysVal of weekDays; let i = index">
+                                        <div class="cell split-3" [ngClass]="{'empty':daysVal.ManningRoleShift[0].CrewB_Absent ===''}">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[0].CrewB_Absent}}</label>
+                                            <input *ngIf="isEditManningRole" type="text" [disabled]="daysVal.ManningRoleShift[0].enableEdit || daysVal.ManningRoleShift[0].enableEditC || !daysVal.ManningRoleShift[0].enableEditB" [(ngModel)]="daysVal.ManningRoleShift[0].CrewB_Absent" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                        <div class="cell split-3" [ngClass]="{'empty':daysVal.ManningRoleShift[1].CrewB_Absent ===''}">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[1].CrewB_Absent}}</label>
+                                            <input *ngIf="isEditManningRole" type="text" [disabled]="daysVal.ManningRoleShift[1].enableEdit || daysVal.ManningRoleShift[1].enableEditC || !daysVal.ManningRoleShift[1].enableEditB" [(ngModel)]="daysVal.ManningRoleShift[1].CrewB_Absent" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                        <div class="cell split-3" [ngClass]="{'empty':daysVal.ManningRoleShift[2].CrewB_Absent ===''}">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[2].CrewB_Absent}}</label>
+                                            <input *ngIf="isEditManningRole" type="text" [disabled]="daysVal.ManningRoleShift[2].enableEdit || daysVal.ManningRoleShift[2].enableEditC || !daysVal.ManningRoleShift[2].enableEditB" [(ngModel)]="daysVal.ManningRoleShift[2].CrewB_Absent" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="data-cols crew-col">
+                                <td class="col-title" rowspan="2">
+                                    Crew C
+                                    <div class="col-sub-title">
+                                        Vacation
+                                    </div>
+                                    <div class="col-sub-title">
+                                        Absent
+                                    </div>
+                                </td>
+                                <td class="col-wks">
+                                    <div class="col-wk col" *ngFor="let daysVal of weekDays; let i = index">
+                                        <div class="cell split-3" [ngClass]="{'empty':daysVal.ManningRoleShift[0].CrewC_Vaccation ===''}">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[0].CrewC_Vaccation}}</label>
+                                            <input *ngIf="isEditManningRole" type="text" [disabled]="daysVal.ManningRoleShift[0].enableEdit ||!daysVal.ManningRoleShift[0].enableEditC || daysVal.ManningRoleShift[0].enableEditB" [(ngModel)]="daysVal.ManningRoleShift[0].CrewC_Vaccation" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                        <div class="cell split-3" [ngClass]="{'empty':daysVal.ManningRoleShift[1].CrewC_Vaccation ===''}">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[1].CrewC_Vaccation}}</label>
+                                            <input *ngIf="isEditManningRole" type="text" [disabled]="daysVal.ManningRoleShift[1].enableEdit || !daysVal.ManningRoleShift[1].enableEditC || daysVal.ManningRoleShift[1].enableEditB" [(ngModel)]="daysVal.ManningRoleShift[1].CrewC_Vaccation" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                        <div class="cell split-3" [ngClass]="{'empty':daysVal.ManningRoleShift[2].CrewC_Vaccation ===''}">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[2].CrewC_Vaccation}}</label>
+                                            <input *ngIf="isEditManningRole" type="text" [disabled]="daysVal.ManningRoleShift[2].enableEdit||!daysVal.ManningRoleShift[2].enableEditC || daysVal.ManningRoleShift[2].enableEditB" [(ngModel)]="daysVal.ManningRoleShift[2].CrewC_Vaccation" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="data-cols crew-col">
+                                <td class="col-wks">
+                                    <div class="col-wk col" *ngFor="let daysVal of weekDays; let i = index">
+                                        <div class="cell split-3" [ngClass]="{'empty':daysVal.ManningRoleShift[0].CrewC_Absent ===''}">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[0].CrewC_Absent}}</label>
+                                            <input *ngIf="isEditManningRole" type="text" [disabled]="daysVal.ManningRoleShift[0].enableEdit ||!daysVal.ManningRoleShift[0].enableEditC || daysVal.ManningRoleShift[0].enableEditB" [(ngModel)]="daysVal.ManningRoleShift[0].CrewC_Absent" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                        <div class="cell split-3"  [ngClass]="{'empty':daysVal.ManningRoleShift[1].CrewC_Absent ===''}">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[1].CrewC_Absent}}</label>
+                                            <input *ngIf="isEditManningRole" type="text" [disabled]="daysVal.ManningRoleShift[1].enableEdit || !daysVal.ManningRoleShift[1].enableEditC || daysVal.ManningRoleShift[1].enableEditB" [(ngModel)]="daysVal.ManningRoleShift[1].CrewC_Absent" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                        <div class="cell split-3"  [ngClass]="{'empty':daysVal.ManningRoleShift[2].CrewC_Absent ===''}">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[2].CrewC_Absent}}</label>
+                                            <input *ngIf="isEditManningRole" type="text" [disabled]="daysVal.ManningRoleShift[2].enableEdit ||!daysVal.ManningRoleShift[2].enableEditC || daysVal.ManningRoleShift[2].enableEditB" [(ngModel)]="daysVal.ManningRoleShift[2].CrewC_Absent" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="data-cols crew-col">
+                                <td class="col-title" rowspan="2">
+                                    Crew D
+                                    <div class="col-sub-title">
+                                        Vacation
+                                    </div>
+                                    <div class="col-sub-title">
+                                        Absent
+                                    </div>
+                                </td>
+                                <td class="col-wks">
+                                    <div class="col-wk col" *ngFor="let daysVal of weekDays; let i = index">
+                                        <div class="cell split-3"  [ngClass]="{'empty':daysVal.ManningRoleShift[0].CrewD_Vaccation ===''}">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[0].CrewD_Vaccation}}</label>
+                                            <input *ngIf="isEditManningRole" type="text" [disabled]="daysVal.ManningRoleShift[0].enableEdit ||!daysVal.ManningRoleShift[0].enableEditD || daysVal.ManningRoleShift[0].enableEditC || daysVal.ManningRoleShift[0].enableEditB" [(ngModel)]="daysVal.ManningRoleShift[0].CrewD_Vaccation" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                        <div class="cell split-3" [ngClass]="{'empty':daysVal.ManningRoleShift[1].CrewD_Vaccation ===''}">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[1].CrewD_Vaccation}}</label>
+                                            <input *ngIf="isEditManningRole" type="text" [disabled]="daysVal.ManningRoleShift[1].enableEdit || !daysVal.ManningRoleShift[1].enableEditD || daysVal.ManningRoleShift[1].enableEditC || daysVal.ManningRoleShift[1].enableEditB" [(ngModel)]="daysVal.ManningRoleShift[1].CrewD_Vaccation" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                        <div class="cell split-3" [ngClass]="{'empty':daysVal.ManningRoleShift[2].CrewD_Vaccation ===''}">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[2].CrewD_Vaccation}}</label>
+                                            <input *ngIf="isEditManningRole" type="text" [disabled]="daysVal.ManningRoleShift[2].enableEdit ||!daysVal.ManningRoleShift[2].enableEditD || daysVal.ManningRoleShift[2].enableEditC || daysVal.ManningRoleShift[2].enableEditB" [(ngModel)]="daysVal.ManningRoleShift[2].CrewD_Vaccation" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="data-cols crew-col">
+                                <td class="col-wks">
+                                    <div class="col-wk col" *ngFor="let daysVal of weekDays; let i = index">
+                                        <div class="cell split-3" [ngClass]="{'empty':daysVal.ManningRoleShift[0].CrewD_Absent ===''}">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[0].CrewD_Absent}}</label>
+                                            <input *ngIf="isEditManningRole" type="text" [disabled]="daysVal.ManningRoleShift[0].enableEdit ||!daysVal.ManningRoleShift[0].enableEditD || daysVal.ManningRoleShift[0].enableEditC || daysVal.ManningRoleShift[0].enableEditB"  [(ngModel)]="daysVal.ManningRoleShift[0].CrewD_Absent" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                        <div class="cell split-3" [ngClass]="{'empty':daysVal.ManningRoleShift[1].CrewD_Absent ===''}">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[1].CrewD_Absent}}</label>
+                                            <input *ngIf="isEditManningRole" type="text" [disabled]="daysVal.ManningRoleShift[1].enableEdit || !daysVal.ManningRoleShift[1].enableEditD|| daysVal.ManningRoleShift[1].enableEditC || daysVal.ManningRoleShift[1].enableEditB " [(ngModel)]="daysVal.ManningRoleShift[1].CrewD_Absent" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                        <div class="cell split-3" [ngClass]="{'empty':daysVal.ManningRoleShift[2].CrewD_Absent ===''}">
+                                            <label *ngIf="!isEditManningRole">{{daysVal.ManningRoleShift[2].CrewD_Absent}}</label>
+                                            <input *ngIf="isEditManningRole" type="text" [disabled]="daysVal.ManningRoleShift[2].enableEdit || !daysVal.ManningRoleShift[2].enableEditD || daysVal.ManningRoleShift[2].enableEditC || daysVal.ManningRoleShift[2].enableEditB" [(ngModel)]="daysVal.ManningRoleShift[2].CrewD_Absent" maxlength="3" onPaste="return false"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="text-edit">
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+            </div>
+            <div class="preloader pos-abs" *ngIf="loadingRole">
+                <div class="fountainGroup">
+                    <div class="fountainG" id="fountainG_1"></div>
+                    <div class="fountainG" id="fountainG_2"></div>
+                    <div class="fountainG" id="fountainG_3"></div>
+                    <div class="fountainG" id="fountainG_4"></div>
+                    <div class="fountainG" id="fountainG_5"></div>
+                    <div class="fountainG" id="fountainG_6"></div>
+                    <div class="fountainG" id="fountainG_7"></div>
+                    <div class="fountainG" id="fountainG_8"></div>
+                </div>
+            </div>
+        </div>
+        <!-- Table Holder Ends Here -->
+        <!-- Crew Filter Start-->
+        <div class="crew-filter justify-content-between d-flex">
+            <div class="align-items-center d-flex">
+                <!-- <label>Select Crew</label>
+                <div class="custom-select-style">
+                    <select id="crewValue" name="crewValue" [(ngModel)]="selectedCrew" (ngModelChange)="selectedCrewChange()">
+                        <option *ngFor="let crew of crewList; let i = index" value="{{crew.CrewId}}">{{crew.CrewisplayName}}</option>
+                    </select>
+                </div> -->
+            </div>
+            <div class="edit-button-group pull-right">
+                <button class="btn btn-blue " id="" *ngIf="!isEditManningCrew" (click)="masterInputCrewEdit()">Edit</button>
+                <button class="btn btn-blue " id="" *ngIf="isEditManningCrew" (click)="masterInputCrewSave()">Save</button>
+                <button class="btn btn-blue " id="" *ngIf="isEditManningCrew" (click)="masterInputCrewCancel()">Cancel</button>
+            </div>
+        </div>
+        <!-- Crew Filter End -->
+        <div class="secondary-block pos-relative">
+            <div class="cust-table-holder master-input-edit">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Crew Details</th>
+                            <th *ngFor="let crew of crewDetailsDay; let i = index">{{crew.DisplayName}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Crew A Level</td>
+                            <td *ngFor="let crew of crewDetailsDay; let i = index">
+                                <label *ngIf="!isEditManningCrew">{{crew.CrewDetails[0].CrewLevel}}</label>
+                                <input *ngIf="isEditManningCrew" type="text" [(ngModel)]="crew.CrewDetails[0].CrewLevel" maxlength="3" onPaste="return false" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+                                    class="edit-textbox">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Crew B Level</td>
+                            <td *ngFor="let crew of crewDetailsDay; let i = index">
+                                <label *ngIf="!isEditManningCrew">{{crew.CrewDetails[1].CrewLevel}}</label>
+                                <input *ngIf="isEditManningCrew" type="text" [(ngModel)]="crew.CrewDetails[1].CrewLevel" maxlength="3" onPaste="return false" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+                                    class="edit-textbox">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Crew C Level</td>
+                            <td *ngFor="let crew of crewDetailsDay; let i = index">
+                                <label *ngIf="!isEditManningCrew">{{crew.CrewDetails[2].CrewLevel}}</label>
+                                <input *ngIf="isEditManningCrew" type="text" [(ngModel)]="crew.CrewDetails[2].CrewLevel" maxlength="3" onPaste="return false" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+                                    class="edit-textbox">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Crew D Level</td>
+                            <td *ngFor="let crew of crewDetailsDay; let i = index">
+                                <label *ngIf="!isEditManningCrew">{{crew.CrewDetails[3].CrewLevel}}</label>
+                                <input *ngIf="isEditManningCrew" type="text" [(ngModel)]="crew.CrewDetails[3].CrewLevel" maxlength="3" onPaste="return false" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+                                    class="edit-textbox">
+                            </td>
+                        </tr>
+                        <!-- <tr>
+                            <td>Crew {{selectedCrewName}} Level</td>
+                            <td *ngFor="let crew of crewDetailsDay; let i = index">
+                                <label *ngIf="!isEditManningCrew">{{crew.CrewLevel}}</label>
+                                <input *ngIf="isEditManningCrew" type="text" [(ngModel)]="crew.CrewLevel" maxlength="3" onPaste="return false" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+                                    class="edit-textbox">
+                            </td>
+                        </tr> -->
+                        <!-- <tr>
+                            <td>Crew {{selectedCrewName}} Vacation</td>
+                            <td *ngFor="let crew of crewDetailsDay; let i = index">
+                                <label *ngIf="!isEditManningCrew">{{crew.Vaccation}}</label>
+                                <input *ngIf="isEditManningCrew" type="text" [(ngModel)]="crew.Vaccation" maxlength="3" onPaste="return false" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+                                    class="edit-textbox">
+                            </td>
+                        </tr> -->
+                        <!-- <tr>
+                            <td>Crew {{selectedCrewName}} Absent</td>
+                            <td *ngFor="let crew of crewDetailsDay; let i = index">
+                                <label *ngIf="!isEditManningCrew">{{crew.Absent}}</label>
+                                <input *ngIf="isEditManningCrew" type="text" [(ngModel)]="crew.Absent" maxlength="3" onPaste="return false" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+                                    class="edit-textbox">
+                            </td>
+                        </tr> -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="preloader pos-abs" *ngIf="loadingCrew">
+                <div class="fountainGroup">
+                    <div class="fountainG" id="fountainG_11"></div>
+                    <div class="fountainG" id="fountainG_21"></div>
+                    <div class="fountainG" id="fountainG_31"></div>
+                    <div class="fountainG" id="fountainG_41"></div>
+                    <div class="fountainG" id="fountainG_51"></div>
+                    <div class="fountainG" id="fountainG_61"></div>
+                    <div class="fountainG" id="fountainG_71"></div>
+                    <div class="fountainG" id="fountainG_81"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Content Area Ends Here -->
+</section>
+
+<router-outlet></router-outlet>
+<!--Loader-->
+<app-loader id="appLoader" [hidden]="!loading"></app-loader>

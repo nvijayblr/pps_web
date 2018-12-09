@@ -1,0 +1,8 @@
+/* Pixel to REM  Start*/
+
+$browser-context: 16; // Default.resource-categories
+@function rem($pixels, $context: $browser-context) {
+    @return #{$pixels/$context}rem;
+}
+
+/* Pixel to REM  End*/
